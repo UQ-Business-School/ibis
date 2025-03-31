@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Copyright Statement - Section 113P</title>
+  <link rel="stylesheet" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <style>
+    /* All your existing CSS remains unchanged */
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+    .uq-hero-basic__content, .uq-animated-gradient, .uq-card__title {
+      margin-left: 2rem;
+      margin-right: 2rem;
+    }
+    .uqgenerator-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      border: 1px solid #CDCDCD;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: #555;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .preview-container {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px dashed #CDCDCD;
+    }
+    button {
+      padding: 10px;
+      background-color: #51247a;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .icon-button {
+      vertical-align: middle;
+      background: none;
+      border: 1px solid #CDCDCD;
+      color: #555;
+      line-height: 1.6;
+      width: 100%;
+      cursor: pointer;
+    }
+    .icon-button svg {
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      fill: #51247a;
+      margin-right: 8px;
+      line-height: 1.6;
+    }
+	  code{
+		  background-color: #E8E8E8;
+		  border-radius: 4px;
+	  }
+  </style>
+</head>
+<body>
+  <div class="uq-container"> 
+    <div class="uqgenerator-container">
+      <!-- Live Preview Section -->
+      <div id="preview" class="preview-container"></div>
+
+      <!-- Input Fields -->
+     
+      <label>Looking Ahead</label>
+		<p>Use this icon at the top of the last module page. Reduce the column width to 1 of 4 block widths of Blackboard Ultra.</p>
+      <textarea id="statementText" placeholder="disabled" style="display: none;"></textarea>
+      <button class="uq-button uq-button--large uq-button--expand" onclick="copyToClipboard()">
+        <span class="uq-icon uq-icon--standard--common-file-double"></span>
+        Copy to Clipboard
+      </button>
+    </div>
+  </div>
+
+<!-- Style sheet - to be applied to master version: uqbs-bsan.css -->
+
+<style>
+.uq-animated-gradient-b{
+			display: block;
+			margin: 0 auto 16px;
+			margin-bottom: 16px;
+			background: var(--uq-purple);
+			height: 8px;
+			width: 100px;
+			padding: 0;
+			border-radius: 5px;
+		}
+		.uq-statementb{
+			display: block;
+			background-color: var(--uq-white);
+			width: 100%!important;
+			height: auto;
+			padding-top: 32px;
+			padding-bottom: 32px;
+			text-align: center;
+			font-weight: 400;
+		}
+	.uqbs-font-weight-normal{
+			font-weight: 400;
+		}
+	.uqbs-font-weight-normal b, .uqbs-font-weight-normal strong{
+			font-weight: bolder;
+	}.uqbs-font-weight-heavy{
+			font-weight: bolder;
+	}
+    .swoosh-svg-override {
+    width: 50%!important;
+    max-width: 50%!important;
+    }
+</style>	
+  
+  <!-- Inline Preview & Clipboard Script (custom per generator) -->
+ <script>
+  function updatePreview() {
+    const previewHtml = `
+<div class="stopthink" role="heading" aria-level="4" data-aos="fade-right" data-aos-easing="ease-out-cubic" data-aos-duration="1000" data-aos-delay="0">
+  <!-- Background SVG -->
+  <svg
+  class="swoosh-svg swoosh-svg-override"
+  data-aos="fade"
+  data-aos-delay="1500"
+  viewBox="0 0 16 16"
+  fill="#1F0029"
+  xmlns="http://www.w3.org/2000/svg">
+    <path d='M12.7 11.3c.9-1.2 1.4-2.6 1.4-4.2 0-3.9-3.1-7.1-7-7.1S0 3.2 0 7.1c0 3.9 3.2 7.1 7.1 7.1 1.6 0 3.1-.5 4.2-1.4l3 3c.2.2.5.3.7.3s.5-.1.7-.3c.4-.4.4-1 0-1.4l-3-3.1zm-5.6.8c-2.8 0-5.1-2.2-5.1-5S4.3 2 7.1 2s5.1 2.3 5.1 5.1-2.3 5-5.1 5z'></path>
+  </svg>
+  <!-- Overlay text -->
+  <div class="stopthink-text enable-merriweather">
+    Looking <br> Ahead
+  </div>
+	</div>
+    `;
+    document.getElementById('preview').innerHTML = previewHtml;
+    AOS.init({ duration: 1200, offset: 50 });
+  }
+  // Expose updatePreview globally so imagePicker.js can call it.
+  window.updatePreview = updatePreview;
+
+  function copyToClipboard() {
+    const previewClone = document.getElementById('preview').cloneNode(true);
+    previewClone.querySelectorAll('.aos-init, .aos-animate').forEach(el => {
+      el.classList.remove('aos-init');
+      el.classList.remove('aos-animate');
+    });
+    const htmlToCopy = `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Statement B</title>
+  <link rel="stylesheet" media="all" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"><\/script>
+</head>
+<style>
+    body {
+    overflow: hidden;
+    overscroll-behavior: none;
+    }
+    .swoosh-svg-override {
+    width: 50%!important;
+    max-width: 50%!important;
+    }
+</style>      
+<body>  
+${previewClone.innerHTML}
+<script>
+AOS.init({
+  duration: 1200,
+  offset: 50
+})
+<\/script>  
+</body>
+</html>`;
+    navigator.clipboard.writeText(htmlToCopy).then(() => {
+      alert('Copied to clipboard!');
+    }).catch(err => {
+      alert('Error copying: ' + err);
+    });
+  }
+  
+  // Attach event listeners to update preview when inputs change
+  ['statementText'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updatePreview);
+  });
+  updatePreview();
+  AOS.init({ duration: 1200, offset: 50 });
+	 
+	 
+
+	 
+</script>
+
+</body>
+</html>
