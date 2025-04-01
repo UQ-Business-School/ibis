@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html>
 <head>
@@ -14,7 +15,7 @@
     .container {
       max-width: 1200px;
       margin: 1rem auto;
-      padding: 0px 15px 15px;
+      padding: 15px;
       padding-top: 0;	
       background-color: white;
       border-radius: 8px;
@@ -47,7 +48,9 @@
   </style>
 </head>
 <body>
+	
 <div class="container">
+	<div class="uq-container">
   <h2>Assessment Table Extractor</h2>
   <p><strong>Please read this page carefully as you first need to find your extended course code to be able to extract your table!</strong></p>
   <p>Your <strong><em>extended course code</em></strong> can be found on your course profile page, located within the navigation bar under the large purple banner. See the image below for guidance:</p>
@@ -97,7 +100,7 @@
     <span class="uq-icon uq-icon--standard--common-file-double"></span>Step 4: Copy Assessment HTML to Clipboard
   </button>
 </div>
-
+</div>
 <script>
 // Global variable to store fetched raw HTML
 let fetchedHTML = "";
@@ -179,6 +182,7 @@ function updateLinks(section, userInput) {
       a.setAttribute('href', baseUrl + href);
       a.setAttribute('target', '_blank');
     }
+
   });
 }
 
