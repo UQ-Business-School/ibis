@@ -186,138 +186,152 @@
   </style>	
   
   <!-- Inline Preview & Clipboard Script -->
-  <script>
-    // Global variable to store the current background (and extra) classes.
-    let currentBgClasses = "bg-white";
+    <script>
+  // Global variable to store the current background (and extra) classes.
+  let currentBgClasses = "bg-white";
 
-    // Function to update the preview using content from TinyMCE (if available)
-    function updatePreview() {
-      const content = tinymce.get('statementText') ? tinymce.get('statementText').getContent() : document.getElementById('statementText').value;
-      const previewHtml = `
-        <div class="uqbs-tinymce uqbs-rounded-border--all ${currentBgClasses}" data-aos="fade" data-aos-delay="0">
-          <div class="uq-container">
-              ${content}
-          </div>	
-        </div>
-      `;
-      document.getElementById('preview').innerHTML = previewHtml;
-      AOS.init({ duration: 1200, offset: 50 });
-    }
+  // Function to update the preview using content from TinyMCE (if available)
+  function updatePreview() {
+    const content = tinymce.get('statementText') ? tinymce.get('statementText').getContent() : document.getElementById('statementText').value;
+    const previewHtml = `
+      <div class="uqbs-tinymce uqbs-rounded-border--all ${currentBgClasses}" data-aos="fade" data-aos-delay="0">
+        <div class="uq-container">
+            ${content}
+        </div>  
+      </div>
+    `;
+    document.getElementById('preview').innerHTML = previewHtml;
+    AOS.init({ duration: 1200, offset: 50 });
+  }
 
-    // Initialise TinyMCE on the textarea.
-    tinymce.init({
-      selector: '#statementText',
-		font_family_formats: 'Atkinson Hyperlegible=Atkinson Hyperlegible, sans-serif; Arial=Arial, Helvetica, sans-serif; Merriweather=Merriweather, serif; Montserrat=Montserrat, sans-serif; Open Sans=Open Sans, sans-serif; Roboto=Roboto, sans-serif; Atkinson Hyperlegible=Atkinson Hyperlegible, sans-serif;',
-  		content_css: [
-  		'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap'
-		],
-  		content_style: 'body { font-family: "Open Sans", sans-serif; font-size: 0.875rem; }p { margin: 0; }',
-		block_formats: 'Title=h4;Heading=h5;Subheading=h6;Paragraph=p',
-		color_map: [
-			  // UQ Branded Colours
-			  '#51247A', 'UQ Purple, #51247A',      // --uq-purple
-			  '#000000', 'UQ Black, #000000',       // --uq-black
-			  '#FFFFFF', 'UQ White, #FFFFFF',       // --uq-white
-			  '#2EA836', 'UQ Green, #2EA836',       // --uq-green
-			  '#E62645', 'UQ Red, #E62645',         // --uq-red
-			  '#962A8B', 'UQ Light Purple, #962A8B',// --uq-light-purple
-			  '#1F0029', 'UQ Dark Purple, #1F0029', // --uq-dark-purple
-			  '#BB9D65', 'UQ Gold, #BB9D65',        // --uq-gold
-			  '#FBB800', 'UQ Yellow, #FBB800',      // --uq-yellow
-			  '#EB602B', 'UQ Orange, #EB602B',      // --uq-orange
-			  '#4085C6', 'UQ Blue, #4085C6',        // --uq-blue
-			  '#00A2C7', 'UQ Aqua, #00A2C7',        // --uq-aqua
+  // Initialise TinyMCE on the textarea.
+  tinymce.init({
+    selector: '#statementText',
+    font_family_formats: 'Atkinson Hyperlegible=Atkinson Hyperlegible, sans-serif; Arial=Arial, Helvetica, sans-serif; Merriweather=Merriweather, serif; Montserrat=Montserrat, sans-serif; Open Sans=Open Sans, sans-serif; Roboto=Roboto, sans-serif; Atkinson Hyperlegible=Atkinson Hyperlegible, sans-serif;',
+    content_css: [
+      'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap'
+    ],
+    content_style: 'body { font-family: "Open Sans", sans-serif; font-size: 0.875rem; }p { margin: 0; }',
+    block_formats: 'Title=h4;Heading=h5;Subheading=h6;Paragraph=p',
+    color_map: [
+      // UQ Branded Colours
+      '#51247A', 'UQ Purple, #51247A',      // --uq-purple
+      '#000000', 'UQ Black, #000000',       // --uq-black
+      '#FFFFFF', 'UQ White, #FFFFFF',       // --uq-white
+      '#2EA836', 'UQ Green, #2EA836',       // --uq-green
+      '#E62645', 'UQ Red, #E62645',         // --uq-red
+      '#962A8B', 'UQ Light Purple, #962A8B',// --uq-light-purple
+      '#1F0029', 'UQ Dark Purple, #1F0029', // --uq-dark-purple
+      '#BB9D65', 'UQ Gold, #BB9D65',        // --uq-gold
+      '#FBB800', 'UQ Yellow, #FBB800',      // --uq-yellow
+      '#EB602B', 'UQ Orange, #EB602B',      // --uq-orange
+      '#4085C6', 'UQ Blue, #4085C6',        // --uq-blue
+      '#00A2C7', 'UQ Aqua, #00A2C7',        // --uq-aqua
 
-			  // UQ Neutral Palette
-			  '#D7D1CC', 'UQ Neutral, #D7D1CC',     // --uq-neutral
-			  '#F7F6F5', 'UQ Neutral20, #F7F6F5',   // --uq-neutral20
-			  '#EFECEA', 'UQ Neutral40, #EFECEA',   // --uq-neutral40
-			  '#E7E3E0', 'UQ Neutral60, #E7E3E0',   // --uq-neutral60
-			  '#DFDAD6', 'UQ Neutral80, #DFDAD6',   // --uq-neutral80
+      // UQ Neutral Palette
+      '#D7D1CC', 'UQ Neutral, #D7D1CC',     // --uq-neutral
+      '#F7F6F5', 'UQ Neutral20, #F7F6F5',   // --uq-neutral20
+      '#EFECEA', 'UQ Neutral40, #EFECEA',   // --uq-neutral40
+      '#E7E3E0', 'UQ Neutral60, #E7E3E0',   // --uq-neutral60
+      '#DFDAD6', 'UQ Neutral80, #DFDAD6',   // --uq-neutral80
 
-			  '#999490', 'UQ Dark Grey, #999490',   // --uq-dark-grey
-			  '#EBE8E7', 'UQ Dark Grey20, #EBE8E7', // --uq-dark-grey20
-			  '#D8D2D0', 'UQ Dark Grey40, #D8D2D0', // --uq-dark-grey40
-			  '#C4BDBA', 'UQ Dark Grey60, #C4BDBA', // --uq-dark-grey60
-			  '#B1A8A4', 'UQ Dark Grey80, #B1A8A4', // --uq-dark-grey80
-			  
-			  // Blackboard Colours
-			  '#262626', 'Blackboard Default, #262626', // --bb-default
-			  '#2075A3', 'Blackboard Link, #2075A3',    // --bb-link
-			  '#666666', 'Blackboard Grey, #666666',	
-			  '#A234B5', 'Blackboard Purple, #A234B5',
-			  '#046EF6', 'Blackboard Blue, #046EF6',
-			  '#1C8845', 'Blackboard Green, #1C8845',
-			  '#E72218', 'Blackboard Red, #E72218',
-			  '#F8F8F8', 'Blackboard Table Heading, #F8F8F8',
-			],
-  		color_cols: 6,
-	  plugins: [
+      '#999490', 'UQ Dark Grey, #999490',   // --uq-dark-grey
+      '#EBE8E7', 'UQ Dark Grey20, #EBE8E7', // --uq-dark-grey20
+      '#D8D2D0', 'UQ Dark Grey40, #D8D2D0', // --uq-dark-grey40
+      '#C4BDBA', 'UQ Dark Grey60, #C4BDBA', // --uq-dark-grey60
+      '#B1A8A4', 'UQ Dark Grey80, #B1A8A4', // --uq-dark-grey80
+      
+      // Blackboard Colours
+      '#262626', 'Blackboard Default, #262626', // --bb-default
+      '#2075A3', 'Blackboard Link, #2075A3',    // --bb-link
+      '#666666', 'Blackboard Grey, #666666',  
+      '#A234B5', 'Blackboard Purple, #A234B5',
+      '#046EF6', 'Blackboard Blue, #046EF6',
+      '#1C8845', 'Blackboard Green, #1C8845',
+      '#E72218', 'Blackboard Red, #E72218',
+      '#F8F8F8', 'Blackboard Table Heading, #F8F8F8'
+    ],
+    color_cols: 6,
+    plugins: [
       // Core editing features
-      'anchor', 'accordion', 'autolink', 'autoresize', 'charmap', 'code', 'codesample', 'codesample code', 'help', 'emoticons', 'fullscreen', 'image', 'importcss', 'link', 'lists', 'advlist', 'media', 'pagebreak', 'preview', 'quickbars', 'save', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+      'anchor', 'accordion', 'autolink', 'autoresize', 'charmap', 'code', 'codesample', 'codesample code', 'help', 'emoticons', 'fullscreen', 'image', 'importcss', 'link', 'lists', 'advlist', 'media', 'pagebreak', 'preview', 'quickbars', 'save', 'searchreplace', 'table', 'visualblocks', 'wordcount'
       // Your account includes a free trial of TinyMCE premium features
       // Try the most popular premium features until Jan 20, 2025:
-     // 'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf' //
+      // 'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
     ],
     toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough backcolor forecolor |  codesample code importcss visualblocks save | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat | fullscreen | help',
-	  advlist_bullet_styles: 'default,lower-alpha,lower-greek,lower-roman,upper-alpha,upper-roman',
-	  quickbars_selection_toolbar: 'bold italic | blocks | quicklink forecolor blockquote',
-	  visualblocks_default_state: false,
+    // This callback is triggered when the save button is clicked
+    save_onsavecallback: function () {
+      // Retrieve the editor's content as HTML
+      var content = tinymce.activeEditor.getContent();
+  
+      // Option 1: Download the content as an HTML file
+      var blob = new Blob([content], { type: 'text/html' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'savedContent.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    },
+    advlist_bullet_styles: 'default,lower-alpha,lower-greek,lower-roman,upper-alpha,upper-roman',
+    quickbars_selection_toolbar: 'bold italic | blocks | quicklink forecolor blockquote',
+    visualblocks_default_state: false,
     tinycomments_mode: 'embedded',
     tinycomments_author: 'Author name',
     mergetags_list: [
       { value: 'First.Name', title: 'First Name' },
-      { value: 'Email', title: 'Email' },
+      { value: 'Email', title: 'Email' }
     ],
     ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
-	codesample_languages: [
-    { text: 'HTML/XML', value: 'markup' },
-    { text: 'JavaScript', value: 'javascript' },
-    { text: 'CSS', value: 'css' },
-    { text: 'PHP', value: 'php' },
-    { text: 'Ruby', value: 'ruby' },
-    { text: 'Python', value: 'python' },
-    { text: 'Java', value: 'java' },
-    { text: 'C', value: 'c' },
-    { text: 'C#', value: 'csharp' },
-    { text: 'C++', value: 'cpp' }
-  ],  	
-      setup: function(editor) {
-        // Update preview when the editor is fully initialized.
-        editor.on('init', function() {
-          updatePreview();
-        });
-        // Update preview on content changes.
-        editor.on('keyup change', function() {
-          updatePreview();
-        });
-      }
-    });
-
-    // Fallback: update preview on native input events if TinyMCE isn’t active.
-    document.getElementById('statementText').addEventListener('input', updatePreview);
-
-    // Attach event listeners to all color buttons.
-    document.querySelectorAll("button[id^='bg-']").forEach(button => {
-      button.addEventListener("click", function() {
-        // Update the current background class and refresh the preview.
-        currentBgClasses = button.className;
+    codesample_languages: [
+      { text: 'HTML/XML', value: 'markup' },
+      { text: 'JavaScript', value: 'javascript' },
+      { text: 'CSS', value: 'css' },
+      { text: 'PHP', value: 'php' },
+      { text: 'Ruby', value: 'ruby' },
+      { text: 'Python', value: 'python' },
+      { text: 'Java', value: 'java' },
+      { text: 'C', value: 'c' },
+      { text: 'C#', value: 'csharp' },
+      { text: 'C++', value: 'cpp' }
+    ],
+    setup: function(editor) {
+      // Update preview when the editor is fully initialized.
+      editor.on('init', function() {
         updatePreview();
       });
-    });
-
-    // Initial preview update.
-    updatePreview();
-    AOS.init({ duration: 1200, offset: 50 });
-
-    // Copy-to-clipboard function remains unchanged.
-    function copyToClipboard() {
-      const previewClone = document.getElementById('preview').cloneNode(true);
-      previewClone.querySelectorAll('.aos-init, .aos-animate').forEach(el => {
-        el.classList.remove('aos-init');
-        el.classList.remove('aos-animate');
+      // Update preview on content changes.
+      editor.on('keyup change', function() {
+        updatePreview();
       });
-      const htmlToCopy = `<!doctype html>
+    }
+  });
+
+  // Fallback: update preview on native input events if TinyMCE isn’t active.
+  document.getElementById('statementText').addEventListener('input', updatePreview);
+
+  // Attach event listeners to all color buttons.
+  document.querySelectorAll("button[id^='bg-']").forEach(button => {
+    button.addEventListener("click", function() {
+      // Update the current background class and refresh the preview.
+      currentBgClasses = button.className;
+      updatePreview();
+    });
+  });
+
+  // Initial preview update.
+  updatePreview();
+  AOS.init({ duration: 1200, offset: 50 });
+
+  // Copy-to-clipboard function remains unchanged.
+  function copyToClipboard() {
+    const previewClone = document.getElementById('preview').cloneNode(true);
+    previewClone.querySelectorAll('.aos-init, .aos-animate').forEach(el => {
+      el.classList.remove('aos-init');
+      el.classList.remove('aos-animate');
+    });
+    const htmlToCopy = `<!doctype html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -338,13 +352,13 @@ AOS.init({
 <\/script>  
 </body>
 </html>`;
-      navigator.clipboard.writeText(htmlToCopy).then(() => {
-        alert('Copied to clipboard!');
-      }).catch(err => {
-        alert('Error copying: ' + err);
-      });
-    }
-  </script>
+    navigator.clipboard.writeText(htmlToCopy).then(() => {
+      alert('Copied to clipboard!');
+    }).catch(err => {
+      alert('Error copying: ' + err);
+    });
+  }
+</script>
 
 </body>
 </html>
