@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UQ Icon Generator</title>
+  <link rel="stylesheet" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <style>
+    /* General styling similar to your alerts generator */
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+    .uqgenerator-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      border: 1px solid #CDCDCD;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: #555;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .preview-container {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px dashed #CDCDCD;
+    }
+    button {
+      padding: 10px;
+      background-color: #51247a;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 10px;
+    }
+    .icon-button {
+      background: #f8f8f8;
+      border: 1px solid #CCC;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+	  border-radius: 8px;	
+    }
+    .icon-button.selected {
+      background-color: #d0d0d0;
+      border: 1px solid #A0A0A0;
+    }
+    .icon-button span {
+      display: block;
+      margin: 0 auto;
+    }
+    .icon-name {
+      margin-top: 5px;
+      font-size: 12px;
+      color: #333;
+    }
+    .category-section {
+      margin-bottom: 20px;
+    }
+    .category-section h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #51247a;
+    }
+	  .uq-icon--light{
+		  background-color: #51247A;
+		  padding: 8px 4px 8px 8px;
+	  }
+  </style>
+</head>
+<body>
+  <div class="uq-container">
+    <div class="uqgenerator-container">
+      <!-- Live Preview Section -->
+      <div id="preview" class="preview-container"></div>
+      
+      <!-- Generator Options -->
+      <label for="statementText">Optional Statement Text</label>
+      <textarea id="statementText" placeholder="Enter statement text">READ:</textarea>
+      
+      <label for="iconSize">Icon Size (in pixels, optional)</label>
+      <input type="number" id="iconSize" placeholder="e.g. 128" />
+      
+      <label>Optional Icon Modifiers (disabled)</label>
+      <label for="iconLight" style="display:inline;"><input type="hidden" id="iconLight" />Apply "uq-icon--light" (make icon white - purple background added for demonstration purposes only)</label> 
+      <br>
+      <label for="iconText" style="display:inline;"><input type="hidden" id="iconText" />Apply "uq-icon--text" (make icon black)</label> 
+      
+      <!-- Icon Grid Section -->
+      <div id="iconGridContainer">
+        <!-- Icon grid will be dynamically populated here -->
+      </div>
+      
+      <br>
+      <button class="uq-button uq-button--large uq-button--expand" onclick="copyToClipboard()">
+        <span class="uq-icon uq-icon--standard--common-file-double"></span>
+        Copy to Clipboard
+      </button>
+    </div>
+  </div>
+  
+  <!-- Inline Preview & Clipboard Script -->
+  <script>
+    // Sample icons data structure – extend this to include all icons from the design system
+    const iconsData = {
+	  "agriculture-and-environment": [
+{ category: "agriculture-and-environment", name:"agriculture-machine-harvester-1" },
+{ category: "agriculture-and-environment", name:"agriculture-machine-plow-2" },
+{ category: "agriculture-and-environment", name:"agriculture-machine-tractor" },
+{ category: "agriculture-and-environment", name:"ecology-globe-hand" },
+{ category: "agriculture-and-environment", name:"ecology-globe-nature" },
+{ category: "agriculture-and-environment", name:"ecology-leaf-book-open" },
+{ category: "agriculture-and-environment", name:"ecology-leaf" },
+{ category: "agriculture-and-environment", name:"ecology-plant-hand" },
+{ category: "agriculture-and-environment", name:"farming-wheat" },
+{ category: "agriculture-and-environment", name:"non-gmo-organic-flask" },
+{ category: "agriculture-and-environment", name:"pets-hospital" },
+{ category: "agriculture-and-environment", name:"plant-1" },
+{ category: "agriculture-and-environment", name:"tree-2" }
+],
+"architecture-and-planning": [
+{ category: "architecture-and-planning", name:"building-modern" },
+{ category: "architecture-and-planning", name:"buildings-1" },
+{ category: "architecture-and-planning", name:"buildings-2" },
+{ category: "architecture-and-planning", name:"heavy-equipment-lift-hook-box" },
+{ category: "architecture-and-planning", name:"house-modern" },
+{ category: "architecture-and-planning", name:"measure-ruler-divider" },
+{ category: "architecture-and-planning", name:"project-blueprint-buildings" },
+{ category: "architecture-and-planning", name:"project-notes-buildings" },
+{ category: "architecture-and-planning", name:"real-estate-dimensions-map" },
+{ category: "architecture-and-planning", name:"school-building" }
+],
+"arts-humanities-and-social-sciences": [
+{ category: "arts-humanities-and-social-sciences", name:"book-open-bookmark" },
+{ category: "arts-humanities-and-social-sciences", name:"brain-network" },
+{ category: "arts-humanities-and-social-sciences", name:"human-resources-hierarchy-1" },
+{ category: "arts-humanities-and-social-sciences", name:"instrument-contrabass-sheet" },
+{ category: "arts-humanities-and-social-sciences", name:"network-user" },
+{ category: "arts-humanities-and-social-sciences", name:"office-stamp-documen" },
+{ category: "arts-humanities-and-social-sciences", name:"official-building" },
+{ category: "arts-humanities-and-social-sciences", name:"ranking-people-first" },
+{ category: "arts-humanities-and-social-sciences", name:"read-world" },
+{ category: "arts-humanities-and-social-sciences", name:"school-teacher" },
+{ category: "arts-humanities-and-social-sciences", name:"single-neutral-actions-graduate" },
+{ category: "arts-humanities-and-social-sciences", name:"team-exchange-chat" },
+{ category: "arts-humanities-and-social-sciences", name:"video-player-adjust-finger" },
+{ category: "arts-humanities-and-social-sciences", name:"video-player-movie-1" }
+],
+"business-and-economics": [
+{ category: "business-and-economics", name:"accounting-calculator" },
+{ category: "business-and-economics", name:"analytics-graph-bar-1" },
+{ category: "business-and-economics", name:"briefcase" },
+{ category: "business-and-economics", name:"business-deal-handshake" },
+{ category: "business-and-economics", name:"currency-dollar-increase" },
+{ category: "business-and-economics", name:"data-file-bars-edit" },
+{ category: "business-and-economics", name:"network-cash" },
+{ category: "business-and-economics", name:"network-user" },
+{ category: "business-and-economics", name:"performance-increase-1" },
+{ category: "business-and-economics", name:"performance-user-graph" },
+{ category: "business-and-economics", name:"travel-crossroad-direction-board" }
+],
+"common": [
+{ category: "common", name:"calendar" },
+{ category: "common", name:"chevron-down" },
+{ category: "common", name:"chevron-left" },
+{ category: "common", name:"chevron-right" },
+{ category: "common", name:"chevron-up" },
+{ category: "common", name:"clock" },
+{ category: "common", name:"close" },
+{ category: "common", name:"menu" },
+{ category: "common", name:"pin" },
+{ category: "common", name:"search" },
+{ category: "common", name:"share-circle" },
+{ category: "common", name:"share" }
+],
+"education": [
+{ category: "education", name:"basketball-ball" },
+{ category: "education", name:"bookmarks-document" },
+{ category: "education", name:"family-hold" },
+{ category: "education", name:"family-home" },
+{ category: "education", name:"medical-notes" },
+{ category: "education", name:"mortarboard" },
+{ category: "education", name:"people-man-graduate" },
+{ category: "education", name:"read-glasses" },
+{ category: "education", name:"saving-bank-international" },
+{ category: "education", name:"school-teacher-a" },
+{ category: "education", name:"soccer-player-ball" }
+],
+"engineering-and-computing": [
+{ category: "engineering-and-computing", name:"3d-print-monitor-1" },
+{ category: "engineering-and-computing", name:"cog-desktop" },
+{ category: "engineering-and-computing", name:"cog" },
+{ category: "engineering-and-computing", name:"construction-building" },
+{ category: "engineering-and-computing", name:"database-share" },
+{ category: "engineering-and-computing", name:"equipment-pressure-measure" },
+{ category: "engineering-and-computing", name:"grid-ruler-1" },
+{ category: "engineering-and-computing", name:"icon-plane-1" },
+{ category: "engineering-and-computing", name:"laptop" },
+{ category: "engineering-and-computing", name:"measure-ruler-divider" },
+{ category: "engineering-and-computing", name:"monitor-transfer" },
+{ category: "engineering-and-computing", name:"renewable-energy-solar-panel" },
+{ category: "engineering-and-computing", name:"safety-helmet-1" },
+{ category: "engineering-and-computing", name:"user-3d-box" }
+],
+"health-and-behavioural-sciences": [
+{ category: "health-and-behavioural-sciences", name:"ambulance-car" },
+{ category: "health-and-behavioural-sciences", name:"brain-head-1" },
+{ category: "health-and-behavioural-sciences", name:"conversation-speak" },
+{ category: "health-and-behavioural-sciences", name:"dentistry-tooth" },
+{ category: "health-and-behavioural-sciences", name:"disability-cane" },
+{ category: "health-and-behavioural-sciences", name:"disability-walk-blind" },
+{ category: "health-and-behavioural-sciences", name:"disability-walking-help" },
+{ category: "health-and-behavioural-sciences", name:"hospital-bedroom-nurse" },
+{ category: "health-and-behavioural-sciences", name:"medical-specialty-breathing" },
+{ category: "health-and-behavioural-sciences", name:"medical-specialty-hearing" },
+{ category: "health-and-behavioural-sciences", name:"medical-specialty-rehabilitation" },
+{ category: "health-and-behavioural-sciences", name:"presentation-speaker" }
+],
+"how-youll-learn": [
+{ category: "how-youll-learn", name:"baggage-plane" },
+{ category: "how-youll-learn", name:"book-open-text" },
+{ category: "how-youll-learn", name:"construction-shovel" },
+{ category: "how-youll-learn", name:"e-learning-book-laptop" },
+{ category: "how-youll-learn", name:"messages-people-user-bubble-circle" },
+{ category: "how-youll-learn", name:"multiple-circle-1" },
+{ category: "how-youll-learn", name:"multiple-circle" },
+{ category: "how-youll-learn", name:"office-desk-lamp" },
+{ category: "how-youll-learn", name:"optimization-rocket-graph" },
+{ category: "how-youll-learn", name:"performance-presentation-graph" },
+{ category: "how-youll-learn", name:"seo-search-page" },
+{ category: "how-youll-learn", name:"users" }
+],
+"law": [
+{ category: "law", name:"law" },
+{ category: "law", name:"legal-judge-balance" },
+{ category: "law", name:"legal-judge" },
+{ category: "law", name:"legal-scale-document" },
+{ category: "law", name:"official-building" },
+{ category: "law", name:"police-man-1" },
+{ category: "law", name:"saving-bank-international" },
+{ category: "law", name:"saving-bank" }
+],
+"medicine": [
+{ category: "medicine", name:"app-smartphone-touch" },
+{ category: "medicine", name:"hospital-first-aid" },
+{ category: "medicine", name:"medical-app-laptop-1" },
+{ category: "medicine", name:"medical-hospital-1" },
+{ category: "medicine", name:"medical-instrument-stethoscope" },
+{ category: "medicine", name:"medical-personnel-doctor" },
+{ category: "medicine", name:"medical-personnel-nurse" },
+{ category: "medicine", name:"monitor-heart-beat-search" },
+{ category: "medicine", name:"monitor-heart-beat" },
+{ category: "medicine", name:"monitor-heart-notes" },
+{ category: "medicine", name:"pill-clock" }
+],
+"other": [
+{ category: "other", name:"aboriginal-flag" },
+{ category: "other", name:"accounting-coins-stack" },
+{ category: "other", name:"american-football-run-ball" },
+{ category: "other", name:"american-football-score" },
+{ category: "other", name:"athletics-jumping-person" },
+{ category: "other", name:"beach-palm-water" },
+{ category: "other", name:"bicycle" },
+{ category: "other", name:"biking-person" },
+{ category: "other", name:"book-open-text" },
+{ category: "other", name:"buildings-2" },
+{ category: "other", name:"bus" },
+{ category: "other", name:"business-crossroad" },
+{ category: "other", name:"calendar-add" },
+{ category: "other", name:"car-1" },
+{ category: "other", name:"card-game-dice" },
+{ category: "other", name:"checklist-pen" },
+{ category: "other", name:"checklist" },
+{ category: "other", name:"content-notebook-pencil" },
+{ category: "other", name:"e-learning-book-laptop" },
+{ category: "other", name:"earth-3" },
+{ category: "other", name:"fast-food-burger-drink" },
+{ category: "other", name:"fitness-weightlift" },
+{ category: "other", name:"flag-1" },
+{ category: "other", name:"force-touch-double-tap" },
+{ category: "other", name:"gauge-dashboard" },
+{ category: "other", name:"history-vase" },
+{ category: "other", name:"hotel-bedroom-1" },
+{ category: "other", name:"library-art" },
+{ category: "other", name:"module-puzzle" },
+{ category: "other", name:"museum-painting" },
+{ category: "other", name:"network-users" },
+{ category: "other", name:"notes-edit" },
+{ category: "other", name:"paralympics-swimming" },
+{ category: "other", name:"peer-assessed" },
+{ category: "other", name:"phone-action-information" },
+{ category: "other", name:"profile-user-cash-message" },
+{ category: "other", name:"railroad-train-1" },
+{ category: "other", name:"restaurant-eating-set" },
+{ category: "other", name:"screen-1" },
+{ category: "other", name:"sea-transport-boat" },
+{ category: "other", name:"shop-cart" },
+{ category: "other", name:"soccer-player" },
+{ category: "other", name:"study-book" },
+{ category: "other", name:"supermarket" },
+{ category: "other", name:"synchronize-arrows-triangle" },
+{ category: "other", name:"tags-cash" },
+{ category: "other", name:"tennis-backhand" },
+{ category: "other", name:"tennis-racquet" },
+{ category: "other", name:"time-clock-circle-1" },
+{ category: "other", name:"tool-box" },
+{ category: "other", name:"touch-finger" },
+{ category: "other", name:"travel-luggage-1" },
+{ category: "other", name:"travel-paper-plane" },
+{ category: "other", name:"trip-destination" },
+{ category: "other", name:"walking" },
+{ category: "other", name:"yoga-shoulder-stretch" }
+],
+"rankings": [
+{ category: "rankings", name:"award-badge-star" },
+{ category: "rankings", name:"award-badge" },
+{ category: "rankings", name:"award-medal-1" },
+{ category: "rankings", name:"award-medal-2" },
+{ category: "rankings", name:"award-medal" },
+{ category: "rankings", name:"award-ribbon-star-1" },
+{ category: "rankings", name:"award-ribbon-star-2" },
+{ category: "rankings", name:"award-ribbon-star-3" },
+{ category: "rankings", name:"award-star-head" },
+{ category: "rankings", name:"award-trophy-star-1" },
+{ category: "rankings", name:"award-trophy-star-11" },
+{ category: "rankings", name:"award-trophy-star" },
+{ category: "rankings", name:"award-trophy" },
+{ category: "rankings", name:"certified-ribbon-1" },
+{ category: "rankings", name:"certified-ribbon-2" },
+{ category: "rankings", name:"common-file-award" },
+{ category: "rankings", name:"school-book-trophy" },
+{ category: "rankings", name:"seo-trophy" },
+{ category: "rankings", name:"window-badge" }
+],
+"science-and-mathematics": [
+{ category: "science-and-mathematics", name:"accounting-calculator" },
+{ category: "science-and-mathematics", name:"button-loop" },
+{ category: "science-and-mathematics", name:"cat-sitting" },
+{ category: "science-and-mathematics", name:"drone-1" },
+{ category: "science-and-mathematics", name:"global-warming-high-temperature" },
+{ category: "science-and-mathematics", name:"lab-flask-experiment" },
+{ category: "science-and-mathematics", name:"lab-tube-bottle" },
+{ category: "science-and-mathematics", name:"lab-tube-experiment" },
+{ category: "science-and-mathematics", name:"lab-tubes" },
+{ category: "science-and-mathematics", name:"organic-flask-1" },
+{ category: "science-and-mathematics", name:"science-brain" },
+{ category: "science-and-mathematics", name:"science-molecule-strucutre" },
+{ category: "science-and-mathematics", name:"science-molecule" },
+{ category: "science-and-mathematics", name:"science-neurons" }
+],
+"social": [
+{ category: "social", name:"email" },
+{ category: "social", name:"facebook" },
+{ category: "social", name:"linkedin" },
+{ category: "social", name:"social-email-circle" },
+{ category: "social", name:"social-facebook-circle" },
+{ category: "social", name:"social-instagram2-circle" },
+{ category: "social", name:"social-linkedin-circle" },
+{ category: "social", name:"social-wechat-circle" },
+{ category: "social", name:"social-weebo-circle" },
+{ category: "social", name:"social-x-twitter-circle" },
+{ category: "social", name:"social-x-twitter" },
+{ category: "social", name:"social-you-tube-circle" },
+{ category: "social", name:"social-youku-circle" }
+],
+"standard": [
+{ category: "standard", name:"add" },
+{ category: "standard", name:"adjustment-schemes" },
+{ category: "standard", name:"arrow-down-1" },
+{ category: "standard", name:"arrow-left-1" },
+{ category: "standard", name:"arrow-right-1" },
+{ category: "standard", name:"arrow-right" },
+{ category: "standard", name:"arrow-up-1" },
+{ category: "standard", name:"arrow-up" },
+{ category: "standard", name:"bubble-square-question" },
+{ category: "standard", name:"calendar-3" },
+{ category: "standard", name:"check-circle" },
+{ category: "standard", name:"check-sml" },
+{ category: "standard", name:"check" },
+{ category: "standard", name:"chevron-down-sml" },
+{ category: "standard", name:"chevron-down" },
+{ category: "standard", name:"chevron-left-sml" },
+{ category: "standard", name:"chevron-left" },
+{ category: "standard", name:"chevron-right-sml" },
+{ category: "standard", name:"chevron-right" },
+{ category: "standard", name:"chevron-up-sml" },
+{ category: "standard", name:"chevron-up" },
+{ category: "standard", name:"close" },
+{ category: "standard", name:"common-file-award" },
+{ category: "standard", name:"common-file-double" },
+{ category: "standard", name:"conversation-chat-text" },
+{ category: "standard", name:"dual-program" },
+{ category: "standard", name:"email-action-unread" },
+{ category: "standard", name:"exclamation-circle" },
+{ category: "standard", name:"exclamation-triangle" },
+{ category: "standard", name:"expand-3" },
+{ category: "standard", name:"information-circle" },
+{ category: "standard", name:"link" },
+{ category: "standard", name:"minus-sml" },
+{ category: "standard", name:"minus" },
+{ category: "standard", name:"navigation-menu" },
+{ category: "standard", name:"navigation-next" },
+{ category: "standard", name:"network-information" },
+{ category: "standard", name:"network-user" },
+{ category: "standard", name:"phone" },
+{ category: "standard", name:"pin" },
+{ category: "standard", name:"plus-sml" },
+{ category: "standard", name:"plus" },
+{ category: "standard", name:"region-domestic" },
+{ category: "standard", name:"region-international" },
+{ category: "standard", name:"school-teacher-correct" },
+{ category: "standard", name:"search" },
+{ category: "standard", name:"settings-slider" },
+{ category: "standard", name:"shrink-2" },
+{ category: "standard", name:"subtract" },
+{ category: "standard", name:"x-circle" },
+{ category: "standard", name:"x-sml" },
+{ category: "standard", name:"x" }
+],
+"student-services": [
+{ category: "student-services", name:"disability-wheelchair" },
+{ category: "student-services", name:"hotel-single-bed-1" },
+{ category: "student-services", name:"information-desk-hi" },
+{ category: "student-services", name:"insurance-head" },
+{ category: "student-services", name:"maps-search" },
+{ category: "student-services", name:"religion-islam-pray" },
+{ category: "student-services", name:"single-neutral-briefcase" },
+{ category: "student-services", name:"study-desk" },
+{ category: "student-services", name:"transportation-ticket-bus-transfer-1" }
+],
+"transport": [
+{ category: "transport", name:"road-sign-turn-right-1" },
+{ category: "transport", name:"stop-sign" }
+],
+"bsan": [
+{ category: "bsan", name:"ethical-debate" },
+{ category: "bsan", name:"social-activity" },
+{ category: "bsan", name:"interactive-book" },
+{ category: "bsan", name:"coding-bootcamp" },
+{ category: "bsan", name:"module-reflection" },
+{ category: "bsan", name:"link" },
+{ category: "bsan", name:"live" },
+{ category: "bsan", name:"module" },
+{ category: "bsan", name:"reading" },
+{ category: "bsan", name:"activity" },
+{ category: "bsan", name:"new-tab" }
+]
+
+      // Add more categories and icons as needed
+    };
+    
+    // Global variable to store the selected icon's base class
+    let selectedIconClass = "";
+    
+    // Generate the icon grid dynamically
+    function generateIconGrid() {
+      const container = document.getElementById('iconGridContainer');
+      container.innerHTML = "";
+      for (const [categoryName, icons] of Object.entries(iconsData)) {
+        const categorySection = document.createElement('div');
+        categorySection.className = "category-section";
+        
+        const heading = document.createElement('h3');
+        heading.textContent = categoryName;
+        categorySection.appendChild(heading);
+        
+        const grid = document.createElement('div');
+        grid.className = "icon-grid";
+        
+        icons.forEach(icon => {
+          const btn = document.createElement('button');
+          btn.className = "icon-button";
+          // Build the icon class string e.g., "uq-icon uq-icon--architecture-and-planning--building-modern"
+          const iconClass = `uq-icon uq-icon--${icon.category}--${icon.name}`;
+          btn.setAttribute('data-icon-class', iconClass);
+          
+          // Create the icon element
+          const iconSpan = document.createElement('span');
+          iconSpan.className = iconClass;
+          btn.appendChild(iconSpan);
+          
+          // Display the icon name below the icon
+          const iconNameDiv = document.createElement('div');
+          iconNameDiv.className = "icon-name";
+          const formattedName = icon.name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+          iconNameDiv.textContent = formattedName;
+          btn.appendChild(iconNameDiv);
+          
+          // When an icon is clicked, mark it as selected and update the preview
+          btn.addEventListener('click', function() {
+            document.querySelectorAll('.icon-button').forEach(button => button.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedIconClass = iconClass;
+            updatePreview();
+          });
+          
+          grid.appendChild(btn);
+        });
+        categorySection.appendChild(grid);
+        container.appendChild(categorySection);
+      }
+    }
+    
+    // Update the preview area with the selected icon and options
+    function updatePreview() {
+      const statement = document.getElementById('statementText').value;
+      const size = document.getElementById('iconSize').value;
+      const light = document.getElementById('iconLight').checked ? " uq-icon--light" : "";
+      const text = document.getElementById('iconText').checked ? " uq-icon--text" : "";
+      
+      // Build inline style if a pixel size is provided
+      let styleAttr = "";
+      if(size) {
+        styleAttr = ` style="width: ${size}px; height: ${size}px;"`;
+      }
+      
+      // Construct the icon markup if an icon has been selected
+      const iconMarkup = selectedIconClass 
+        ? `<span class="${selectedIconClass}${light}${text}"${styleAttr}></span>` 
+        : "";
+      
+      // Build the full preview HTML (wrapped within a container similar to your alerts generator)
+      const previewHtml = `
+<body>
+<div class="uqbs-general-container">
+  <div class="uqbs-general-icon-container text-center" tabindex="0" role="img" aria-label="Open book icon" data-aos="fade-right">
+	<span style="margin: 0 auto; padding: 15% 0; display: block; position: relative; height: 100%; width: 100%; font-size: 1.1rem; text-align: center;">&nbsp;${iconMarkup}</span>
+    <!-- <svg viewbox="0 0 24 24" fill="none" role="presentation">
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+    </svg>-->
+  </div>
+  <div class="uqbs-general-text" tabindex="1" data-aos="fade-right" style="padding: 1rem;">
+    ${statement}
+  </div>
+</div>
+</body>
+`;
+      document.getElementById('preview').innerHTML = previewHtml;
+      AOS.init({ duration: 1200, offset: 50 });
+    }
+    
+    // Copy the complete HTML snippet (with head, body, etc.) to clipboard
+    function copyToClipboard() {
+      const previewClone = document.getElementById('preview').cloneNode(true);
+      previewClone.querySelectorAll('[data-aos]').forEach(el => {
+        el.removeAttribute('data-aos');
+      });
+      const htmlToCopy = `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>UQ Icon Preview</title>
+  <link rel="stylesheet" media="all" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"><\/script>
+</head>  
+${previewClone.outerHTML}
+<script>
+AOS.init({
+  duration: 1200,
+  offset: 50
+})
+<\/script>  
+</html>`;
+      navigator.clipboard.writeText(htmlToCopy).then(() => {
+        alert('Copied to clipboard!');
+      }).catch(err => {
+        alert('Error copying: ' + err);
+      });
+    }
+    
+    // Attach event listeners for option changes
+    document.getElementById('statementText').addEventListener('input', updatePreview);
+    document.getElementById('iconSize').addEventListener('input', updatePreview);
+    document.getElementById('iconLight').addEventListener('change', updatePreview);
+    document.getElementById('iconText').addEventListener('change', updatePreview);
+    
+    // Initialize the icon grid and preview on page load
+    generateIconGrid();
+    updatePreview();
+  </script>
+</body>
+</html>
