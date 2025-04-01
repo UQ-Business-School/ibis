@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Numbered Divider</title>
+  <link rel="stylesheet" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>	
+  <style>
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+    .uqgenerator-container {
+      max-width: 1200px;
+      margin: 1rem auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      border: 1px solid #CDCDCD;
+    }
+    .uqbs-divider-dotted{
+      display: block;
+      height: 8px;
+      width: 100%;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px dashed #CDCDCD;
+    }	
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: #555;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .preview-container {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px dashed #CDCDCD;
+    }
+    button {
+      padding: 10px;
+      background-color: #51247a;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 5s, color 5s;
+    }
+	  button:hover {
+      background-color: white;
+	  color: var(--uq-purple);	  
+    }
+	  .uqbs-bsan-subheading{
+		  display: inline-block;
+		  height: 2rem;
+		  width: 100%;
+		  margin-top: 0;
+		  margin-bottom: 0.5rem;
+		  padding: 0;
+	  }
+  </style>
+</head>
+<body>
+  <div class="uq-container"> 
+    <div class="uqgenerator-container">
+
+      <!-- This preview container is optional if you wish to display the generated HTML string -->
+      <div id="preview" class="preview-container"></div>
+      
+      <!-- copy code to clipboard -->
+      <button class="uq-button uq-button--large uq-button--expand" onclick="copyToClipboard()">
+        <span class="uq-icon uq-icon--standard--common-file-double"></span>
+        Copy to Clipboard
+      </button>
+      
+      <div class="uqbs-divider-dotted"></div>
+      
+      <label>Number or Letter</label>
+		<span class="uqbs-bsan-subheading">Enter a number or letter. Designed for two (2) characters. Supports up to four (4) characters.</span>
+      <input type="text" id="note" placeholder="Enter a number or letter. Supports up to two (2) characters." value="1" maxlength="4">
+      
+    </div>
+  </div>
+  
+  <script>
+   // Update the subheading live as the user types.
+    document.getElementById('note').addEventListener('input', function() {
+      var noteSpan = document.querySelector('.uqbs-bsan-subheading span[role="note"]');
+      noteSpan.textContent = this.value || "";
+      
+      // Optional: update the preview container (if you want to show the final generated HTML)
+      document.getElementById('preview').innerHTML = generateHTML();
+    });
+    
+    // Function to generate the HTML content that will be copied.
+    function generateHTML() {
+      // Use the current value from the input or default text if empty.
+      var noteText = document.getElementById('note').value || "";
+      
+      // Build the HTML string. Note that the stylesheet and script tags are included as active elements.
+      var htmlContent = `
+<link rel="stylesheet" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+<style>body{overflow:hidden;overscroll-behavior:none}</style>
+<div class="uqbs-divider-circle-over-line">
+  <div class="uqbs-divider-dotted-line"></div>
+  <div class="uqbs-divider-circle">${noteText}</div> <!-- change number here -->
+</div>
+
+`;
+      return htmlContent.trim();
+    }
+    
+    // Function to copy the generated HTML to the clipboard and animate the button.
+    function copyToClipboard() {
+      var htmlToCopy = generateHTML();
+      
+      // Copy the HTML string to the clipboard.
+      navigator.clipboard.writeText(htmlToCopy).then(function() {
+        var button = document.querySelector("button.uq-button");
+        // Change the button text and background color immediately.
+        button.innerText = "Copied!";
+        button.style.backgroundColor = "var(--uq-green)";
+        
+        // After 5 seconds, revert the text and remove the inline background style so the CSS hover works.
+        setTimeout(function() {
+          button.innerHTML = "<span class='uq-icon uq-icon--standard--common-file-double'></span> Copy to Clipboard";
+          button.style.backgroundColor = "";
+        }, 5000);
+      }, function(err) {
+        console.error("Could not copy text: ", err);
+      });
+    }
+    
+    // Optional: initialize the preview container on page load.
+    document.getElementById('preview').innerHTML = generateHTML();
+  </script>
+	<script>
+        AOS.init({
+          duration: 1200,
+          offset: 80,
+          once: true,	  
+        })
+      </script>
+</body>
+</html>
