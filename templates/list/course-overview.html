@@ -97,6 +97,12 @@
       <div id="preview" class="preview-container"></div>
       
       <!-- Generator Options -->
+	    <h1 class="text-red">Currently broken, don't use until updated</h1>
+	    <p>Issue:</p>
+	    <p><ul><li>A) There's no body tag oops</li>
+<li>B) There's excess div being included - not that I think it's clashing, but it still needs to be patched,</li>
+<li>C) What is causing the clash is that I added a manual <span> with some hacked CSS into it, but the new CSS that's been pushed to it is doubling up. </li>
+<li>This code is the bad code: <b>&lt;span style="margin: 0 auto; padding: 15% 0; display: block; position: relative; height: 100%; width: 100%; font-size: 1.1rem; text-align: center;">&nbsp;</b>&lt;span class="uq-icon uq-icon--how-youll-learn--book-open-text">&lt;/span><b></span></b></li></ul></p>
       <label for="statementText">Optional Statement Text</label>
       <textarea id="statementText" placeholder="Enter statement text">READ:</textarea>
       
