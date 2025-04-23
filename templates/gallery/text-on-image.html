@@ -226,9 +226,16 @@
       pointer-events: none;
     }
 	  .uq-hero-basic-gradient{
-		  background-color: #262626; 
+		  background-color: #262626!important; 
 	  } 
-	  .uq-hero-basic__image, .opacity65{ opacity: 0.65;
+	  .uq-hero-basic__image, .opacity65{ opacity: 0.65!important;
+	  }
+	  
+	/* Push below to superstyle.css */  
+	  .uq-hero-basic-gradient-override{
+		  background-color: #262626!important; 
+	  } 
+	  .uq-hero-basic__image-override, .opacity65{ opacity: 0.65!important;
 	  }
   </style>
 </head>
@@ -301,8 +308,8 @@
   </div>
 
   <!-- External JavaScript files for the image library and image picker -->
-  <script src="https://uq-business-school.github.io/ibis/imagetool/imageLibrary.js"></script>
-  <script src="https://uq-business-school.github.io/ibis/imagetool/imagePicker.js"></script>
+  <script src="https://uqgblaze.github.io/bingen/imagetool/imageLibrary.js"></script>
+  <script src="https://uqgblaze.github.io/bingen/imagetool/imagePicker.js"></script>
 
   <!-- Inline Preview & Clipboard Script (custom per generator) -->
  <script>
@@ -313,8 +320,8 @@
           <span class="uq-icon uq-icon--standard--information-circle uq-icon--light" style="margin-right: 0.25rem;"></span>${creditValue}
        </div>` : '';
     const previewHtml = `
-      <div class="uq-hero-basic uq-hero-basic-gradient uqbs-rounded-border--all" style="margin-bottom: 0;">
-        <div class="uq-hero-basic__image">
+      <div class="uq-hero-basic uq-hero-basic-gradient uq-hero-basic-gradient-override uqbs-rounded-border--all" style="margin-bottom: 0;">
+        <div class="uq-hero-basic__image uq-hero-basic__image-override">
           <img data-aos="fade" data-aos- opacity65duration="2400"
                src="${document.getElementById('imageUrl').value}" alt="" class="uqbs-rounded-border--all">
         </div>
