@@ -128,15 +128,20 @@
       background: transparent!important;  
       padding: 0;
       border-radius: 6px;
-      overflow-x: auto;
       font-family: "Fira Code", "Courier New", monospace;
       font-size: 1rem;
       line-height: 1.5;
       text-wrap: normal;
+      transition: background-color 0.4s ease-in-out;
+      white-space: pre-wrap !important;
+      word-wrap: break-word;
+      overflow-x: hidden !important;
     }
-    pre {
-        transition: background-color 0.4s ease-in-out;
+    pre code {
+        white-space: pre-wrap !important;
+        word-wrap: break-word;
     }
+
 
   </style>
 </head>
