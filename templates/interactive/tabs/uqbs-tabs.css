@@ -1,0 +1,104 @@
+:root{
+    --window-height: 500px; /* Default = 500px;  Set the minimum height for the window in BB Ultra to reduce scrollbar from appearing */
+    --window-width: 1200px; /* Default = 1200px; Set the maximum width for the window in BB */
+    --window-bgcolor: #fcfcfc; /* Default = #FFF; Changes the window background color */
+    --navbar-bgcolor: #ebebeb; /* Default = #EBEBEB; Changes the tab background color */
+}
+body {
+  font-family: inherit;
+}
+.uqbs-tab-body {
+  background: var(--window-bgcolor, #FCFCFC);
+  padding: 2rem;
+  max-width: var(--window-width, 1200px);
+  border-radius: 8px;  
+  margin: auto;
+  min-height: var(--window-height, 500px);
+}
+.uqbs-tab-container {
+  max-width: 1100px;
+  margin: auto;
+  background: #fff;
+  border: 1px solid #CCC;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: min-height 0.3s ease;
+}
+.uqbs-tab:focus-visible {
+  outline: 3px solid #51247A; /* UQ purple */
+  outline-offset: 2px;
+}
+.uqbs-tabs {
+  position: relative;
+  display: flex;
+  border-bottom: 2px solid #eee;
+  overflow: hidden;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.uqbs-tab {
+  flex: 1;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  color: #444;
+  background: transparent;
+  border: none;
+  transition: background 0.3s ease, color 0.3s ease;
+  position: relative;
+}
+
+.uqbs-tab[aria-selected="true"] {
+  color: #51247A;
+  background: var(--navbar-bgcolor, #ebebeb);
+}
+
+.uqbs-tab:not([aria-selected="true"]):hover {
+  background-color: #F8F8F8;
+  box-shadow: inset 0 2px 0 #51247A;
+}
+
+.uqbs-tab:focus {
+  box-shadow: inset 0 2px 0 #51247A;
+  outline: 2px solid #000;
+  outline-offset: -5px;
+}
+
+.uqbs-tab-indicator {
+  position: absolute;
+  bottom: 0;
+  height: 3px;
+  width: 0;
+  background-color: #51247A;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.4s ease, width 0s ease 0.4s;
+  border-radius: 2px 2px 0 0;
+  pointer-events: none;
+}
+
+.uqbs-tab-content {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  padding: 1.5rem;
+  display: none;
+}
+
+.uqbs-tab-content[aria-hidden="false"] {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.uqbs-placeholder {
+  height: 200px;
+  background: #eee;
+  border-radius: 6px;
+  text-align: center;
+  line-height: 200px;
+  color: #666;
+  font-weight: 500;
+}
