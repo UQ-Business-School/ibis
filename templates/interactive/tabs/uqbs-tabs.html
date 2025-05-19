@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UQ Tab Generator</title>
+  <!-- Styles for live tabs -->
+  <link rel="stylesheet" href="https://uq-business-school.github.io/ibis/templates/interactive/tabs/uqbs-tabs.css" />
+  <link rel="stylesheet" media="all" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+  <!-- Styles for generator UI -->
+  <link rel="stylesheet" href="https://uq-business-school.github.io/ibis/templates/interactive/tabs/uqbs-tabs-generator.css" />
+  <!-- Sorting library for drag-and-drop -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <!-- TinyMCE editor -->
+  <script src="https://uq-business-school.github.io/ibis/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+  <!-- Shared TinyMCE configuration -->
+  <script src="https://uq-business-school.github.io/ibis/templates/interactive/tabs/tinymce.config.js"></script>
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+</head>
+<body>
+  <div class="generator-container">
+    <!-- Live Preview Panel -->
+    <div class="section">
+      <h3>Live Preview</h3>
+      <div class="preview" id="live-preview"></div>
+    </div>
+
+    <!-- Tab Setup Editor -->
+    <div class="section">
+      <h3>Tab Setup (Drag to Reorder)</h3>
+
+      <!-- NEW: Toolbar -->
+      <div id="uqbs-toolbar-container">
+        <!-- Add New Tab -->
+        <button class="uqbs-btn uqbs-add-tab" onclick="addTab(), scheduleSave();">
+          <i class="fas fa-plus"></i>
+          <span>Add New Tab</span>
+        </button>
+
+        <!-- Edit Label for Active Tab -->
+        <div class="uqbs-tab-label-wrapper">
+          <label for="active-tab-label">Tab Label</label>
+          <input
+            id="active-tab-label"
+            type="text"
+            placeholder="Tab Label"
+            oninput="tabData[activeTabIndex].label = this.value; renderTabs(); renderPreview(); scheduleSave();"
+          />
+        </div>
+
+        <!-- Settings -->
+        <button class="uqbs-btn uqbs-settings-btn" onclick="openStyleSettings()">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </button>
+
+        <!-- Delete Tab -->
+        <button class="uqbs-btn uqbs-delete-btn" onclick="deleteTab(activeTabIndex)">
+          <i class="fas fa-times"></i>
+          <span>Delete Tab</span>
+        </button>
+      </div>
+
+      <!-- These two containers are still used by your JS renderTabs() logic -->
+      <div class="uqbs-tab-container" style="margin-top: 1rem;">
+        <div class="editor-tab-buttons" id="editor-tab-buttons"></div>
+        <div class="editor-tab-panels" id="editor-tab-panels"></div>
+      </div>
+    </div>
+
+    <!-- Style Settings moved into a modal dialog -->
+    <dialog id="styleSettingsDialog">
+      <form method="dialog">
+        <h2>Style Settings</h2>
+        <div class="css-variable-group">
+          <div>
+            <label for="window-height">Window Height (px)</label>
+            <input id="window-height" type="number" value="500" onchange="updateCSSVars()" />
+          </div>
+          <div>
+            <label for="window-width">Window Width (px)</label>
+            <input id="window-width" type="number" value="1200" onchange="updateCSSVars()" />
+          </div>
+          <div>
+            <label for="bgcolor">Window BG Colour</label>
+            <input id="bgcolor" type="color" value="#fcfcfc" onchange="updateCSSVars()" />
+          </div>
+          <div>
+            <label for="navbarcolor">Navbar BG Colour</label>
+            <input id="navbarcolor" type="color" value="#ebebeb" onchange="updateCSSVars()" />
+          </div>
+        </div>
+        <menu class="uqbs-btn">
+          <button value="cancel">Close</button>
+          <button type="button" onclick="clearTabMemory()" class="delete-button-confirm">
+            <span class="uq-icon uq-icon--light uq-icon--standard--exclamation-triangle"></span>Clear Memory
+        </button>
+        </menu>
+      </form>
+    </dialog>
+
+    <!-- Export Button -->
+    <div class="section">
+      <button class="uq-button uq-button--large uq-button--expand" onclick="copyHTML()">
+        <span class="uq-icon uq-icon uq-icon--standard--common-file-double"></span>Copy HTML to Clipboard
+      </button>
+    </div>
+
+    <!-- Notes and alerts -->
+     <div class="section">
+        <div class="uq-alert uqbs-rounded-border--all uq-alert--warning" role="note" style="width: 80%; margin: 0 auto;">
+            <div class="uq-alert__message">
+            <span>
+                <b>Remember to <svg width="24" height="24" focusable="false"><path d="M5 16h14a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2c0-1.1.9-2 2-2Zm0 2v2h14v-2H5Zm10 0h2v2h-2v-2Zm-4-6.4L8.7 9.3a1 1 0 1 0-1.4 1.4l4 4c.4.4 1 .4 1.4 0l4-4a1 1 0 1 0-1.4-1.4L13 11.6V4a1 1 0 0 0-2 0v7.6Z" fill-rule="nonzero"></path></svg> Save!</b>
+                <p>The <svg width="24" height="24" focusable="false"><path d="M5 16h14a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2c0-1.1.9-2 2-2Zm0 2v2h14v-2H5Zm10 0h2v2h-2v-2Zm-4-6.4L8.7 9.3a1 1 0 1 0-1.4 1.4l4 4c.4.4 1 .4 1.4 0l4-4a1 1 0 1 0-1.4-1.4L13 11.6V4a1 1 0 0 0-2 0v7.6Z" fill-rule="nonzero"></path></svg><b>Save</b> function in the TinyMCE text editor allows you to download your edits as HTML. </p>
+                <p>Autosave is enabled and configured to autosave after 5 seconds of inactivity. This data will only be available on this device and will be stored based on your browser settings.</p>
+                <p>If you want to insert in this content later, open the save file and copy the HTML, then click on the <b><svg width="24" height="24" focusable="false"><g fill-rule="nonzero"><path d="M9.8 15.7c.3.3.3.8 0 1-.3.4-.9.4-1.2 0l-4.4-4.1a.8.8 0 0 1 0-1.2l4.4-4.2c.3-.3.9-.3 1.2 0 .3.3.3.8 0 1.1L6 12l3.8 3.7ZM14.2 15.7c-.3.3-.3.8 0 1 .4.4.9.4 1.2 0l4.4-4.1c.3-.3.3-.9 0-1.2l-4.4-4.2a.8.8 0 0 0-1.2 0c-.3.3-.3.8 0 1.1L18 12l-3.8 3.7Z"></path></g></svg> Code</b> button and paste the HTML in.</p>
+            </span>
+            </div>	
+        </div>	
+     </div>
+
+     <div class="section">
+      <!-- START DOCUMENTATION -->
+
+      <div class="uqbs-docs-container">
+        <div class="uqbs-docs-column uqbs-docs-wcag">
+            <h3>WCAG 2.2 AA Compliance Checklist:</h3>
+          <ul>
+            <li><strong>Last updated:</strong> 19/05/2025.</li>
+              <li><strong>Status:</strong> Beta testing only; not ready for production.</li>
+      <table class="w-fit min-w-(--thread-content-width)" style="width: 100%; height: 262px; border-collapse: collapse;" border="1" data-start="2976" data-end="3683">
+      <thead data-start="2976" data-end="3006">
+      <tr style="height: 22px;" data-start="2976" data-end="3006">
+      <th style="text-align: center; width: 10.2123%;" data-start="2988" data-end="2997" data-col-size="sm"><span class="_fadeIn_m1hgl_8">Status</span></th>
+      <th style="width: 32.7563%;" data-start="2976" data-end="2988" data-col-size="md"><span class="_fadeIn_m1hgl_8">Criterion</span></th>
+      <th style="width: 57.0345%;" data-start="2997" data-end="3006" data-col-size="md"><span class="_fadeIn_m1hgl_8">Notes</span></th>
+      </tr>
+      </thead>
+      <tbody data-start="3037" data-end="3683">
+      <tr style="height: 22px;" data-start="3037" data-end="3099">
+      <td style="text-align: center; width: 10.2123%;" data-col-size="sm" data-start="3066" data-end="3070"><span class="_fadeIn_m1hgl_8">✅</span></td>
+      <td style="width: 32.7563%;" data-start="3037" data-end="3066" data-col-size="md"><strong data-start="3039" data-end="3048"><span class="_fadeIn_m1hgl_8">1.1.1</span></strong> <span class="_fadeIn_m1hgl_8">Non-</span><span class="_fadeIn_m1hgl_8">text </span><span class="_fadeIn_m1hgl_8">Content</span></td>
+      <td style="width: 57.0345%;" data-col-size="md" data-start="3070" data-end="3099"><span class="_fadeIn_m1hgl_8">No </span><span class="_fadeIn_m1hgl_8">images, </span><span class="_fadeIn_m1hgl_8">all </span><span class="_fadeIn_m1hgl_8">text-</span><span class="_fadeIn_m1hgl_8">based</span></td>
+      </tr>
+      <tr style="height: 22px;" data-start="3100" data-end="3162">
+      <td style="text-align: center; width: 10.2123%;" data-col-size="sm" data-start="3133" data-end="3137"><span class="_fadeIn_m1hgl_8">✅</span></td>
+      <td style="width: 32.7563%;" data-start="3100" data-end="3133" data-col-size="md"><strong data-start="3102" data-end="3111"><span class="_fadeIn_m1hgl_8">1.3.1</span></strong> <span class="_fadeIn_m1hgl_8">Info &amp; </span><span class="_fadeIn_m1hgl_8">Relationships</span></td>
+      <td style="width: 57.0345%;" data-col-size="md" data-start="3137" data-end="3162"><span class="_fadeIn_m1hgl_8">Proper </span><span class="_fadeIn_m1hgl_8">ARIA </span><span class="_fadeIn_m1hgl_8">structure</span></td>
+      </tr>
+      <tr style="height: 22px;" data-start="3163" data-end="3222">
+      <td style="text-align: center; width: 10.2123%;" data-col-size="sm" data-start="3195" data-end="3199"><span class="_fadeIn_m1hgl_8">✅</span></td>
+      <td style="width: 32.7563%;" data-start="3163" data-end="3195" data-col-size="md"><strong data-start="3165" data-end="3174"><span class="_fadeIn_m1hgl_8">1.3.2</span></strong> <span class="_fadeIn_m1hgl_8">Meaningful </span><span class="_fadeIn_m1hgl_8">Sequence</span></td>
+      <td style="width: 57.0345%;" data-col-size="md" data-start="3199" data-end="3222"><span class="_fadeIn_m1hgl_8">DOM </span><span class="_fadeIn_m1hgl_8">order </span><span class="_fadeIn_m1hgl_8">preserved</span></td>
+      </tr>
+      <tr style="height: 22px;" data-start="3223" data-end="3283">
+      <td style="text-align: center; width: 10.2123%;" data-col-size="sm" data-start="3255" data-end="3260"><span class="_fadeIn_m1hgl_8">✅</span></td>
+      <td style="width: 32.7563%;" data-start="3223" data-end="3255" data-col-size="md"><strong data-start="3225" data-end="3234"><span class="_fadeIn_m1hgl_8">2.1.1</span></strong> <span class="_fadeIn_m1hgl_8">Keyboard </span><span class="_fadeIn_m1hgl_8">Accessible</span></td>
+      <td style="width: 57.0345%;" data-col-size="md" data-start="3260" data-end="3283"><span class="_fadeIn_m1hgl_8">Needs </span><span class="_fadeIn_m1hgl_8">arrow </span><span class="_fadeIn_m1hgl_8">key nav</span></td>
+      </tr>
+      <tr style="height: 22px;" data-start="3284" data-end="3349">
+      <td style="text-align: center; width: 10.2123%;" data-start="3313" data-end="3317" data-col-size="sm"><span class="_fadeIn_m1hgl_8">✅</span></td>
+      <td style="width: 32.7563%;" data-start="3284" data-end="3313" data-col-size="md"><strong data-start="3286" data-end="3295"><span class="_fadeIn_m1hgl_8">2.1.2</span></strong> <span class="_fadeIn_m1hgl_8">No </span><span class="_fadeIn_m1hgl_8">Keyboard </span><span class="_fadeIn_m1hgl_8">Trap</span></td>
+      <td style="width: 57.0345%;" data-col-size="md" data-start="3317" data-end="3349"><span class="_fadeIn_m1hgl_8">Users </span><span class="_fadeIn_m1hgl_8">can </span><span class="_fadeIn_m1hgl_8">exit </span><span class="_fadeIn_m1hgl_8">tab </span><span class="_fadeIn_m1hgl_8">interface</span></td>
+      </tr>
+      <tr style="height: 22px;" data-start="3350" data-end="3405">
+      <td style="text-align: center; width: 10.2123%;" data-col-size="sm" data-start="3374" data-end="3378"><span class="_fadeIn_m1hgl_8">✅</span></td>
+      <td style="width: 32.7563%;" data-start="3350" data-end="3374" data-col-size="md"><strong data-start="3352" data-end="3361"><span class="_fadeIn_m1hgl_8">2.4.3</span></strong> <span class="_fadeIn_m1hgl_8">Focus </span><span class="_fadeIn_m1hgl_8">Order</span></td>
+      <td style="width: 57.0345%;" data-col-size="md" data-start="3378" data-end="3405"><span class="_fadeIn_m1hgl_8">Maintains </span><span class="_fadeIn_m1hgl_8">logical </span><span class="_fadeIn_m1hgl_8">order</span></td>
+      </tr>
+      <tr style="height: 22px;" data-start="3406" data-end="3485">
+      <td style="text-align: center; width: 10.2123%;" data-col-size="sm" data-start="3432" data-end="3437"><span class="_fadeIn_m1hgl_8">⚠️</span></td>
+      <td style="width: 32.7563%;" data-start="3406" data-end="3432" data-col-size="md"><strong data-start="3408" data-end="3417"><span class="_fadeIn_m1hgl_8">2.4.7</span></strong> <span class="_fadeIn_m1hgl_8">Focus </span><span class="_fadeIn_m1hgl_8">Visible</span></td>
+      <td style="width: 57.0345%;" data-col-size="md" data-start="3437" data-end="3485"><span class="_fadeIn_m1hgl_8">Ensure </span><span class="_fadeIn_m1hgl_8">visible </span><span class="_fadeIn_m1hgl_8">outline </span><span class="_fadeIn_m1hgl_8">with </span><code data-start="3467" data-end="3483">:focus-visible</code></td>
+      </tr>
+      <tr style="height: 22px;" data-start="3486" data-end="3536">
+      <td style="text-align: center; width: 10.2123%;" data-col-size="sm" data-start="3507" data-end="3511"><span class="_fadeIn_m1hgl_8">✅</span></td>
+      <td style="width: 32.7563%;" data-start="3486" data-end="3507" data-col-size="md"><strong data-start="3488" data-end="3497"><span class="_fadeIn_m1hgl_8">3.2.1</span></strong> <span class="_fadeIn_m1hgl_8">On </span><span class="_fadeIn_m1hgl_8">Focus</span></td>
+      <td style="width: 57.0345%;" data-col-size="md" data-start="3511" data-end="3536"><span class="_fadeIn_m1hgl_8">No </span><span class="_fadeIn_m1hgl_8">unexpected </span><span class="_fadeIn_m1hgl_8">changes</span></td>
+      </tr>
+      <tr style="height: 22px;" data-start="3537" data-end="3596">
+      <td style="text-align: center; width: 10.2123%;" data-start="3567" data-end="3571" data-col-size="sm"><span class="_fadeIn_m1hgl_8">✅</span></td>
+      <td style="width: 32.7563%;" data-start="3537" data-end="3567" data-col-size="md"><strong data-start="3539" data-end="3548"><span class="_fadeIn_m1hgl_8">4.1.2</span></strong> <span class="_fadeIn_m1hgl_8">Name, </span><span class="_fadeIn_m1hgl_8">Role, </span><span class="_fadeIn_m1hgl_8">Value</span></td>
+      <td style="width: 57.0345%;" data-col-size="md" data-start="3571" data-end="3596"><span class="_fadeIn_m1hgl_8">Uses </span><span class="_fadeIn_m1hgl_8">ARIA </span><span class="_fadeIn_m1hgl_8">effectively</span></td>
+      </tr>
+      <tr style="height: 41px;" data-start="3597" data-end="3683">
+      <td style="text-align: center; width: 10.2123%;" data-col-size="sm" data-start="3645" data-end="3650"><span class="_fadeIn_m1hgl_8">⚠️</span></td>
+      <td style="width: 32.7563%;" data-start="3597" data-end="3645" data-col-size="md"><strong data-start="3599" data-end="3609"><span class="_fadeIn_m1hgl_8">2.4.11</span></strong> <span class="_fadeIn_m1hgl_8">Focus </span><span class="_fadeIn_m1hgl_8">Appearance (</span><span class="_fadeIn_m1hgl_8">New </span><span class="_fadeIn_m1hgl_8">in </span><span class="_fadeIn_m1hgl_8">WCAG </span><span class="_fadeIn_m1hgl_8">2.2)</span></td>
+      <td style="width: 57.0345%;" data-col-size="md" data-start="3650" data-end="3683"><span class="_fadeIn_m1hgl_8">Only </span><span class="_fadeIn_m1hgl_8">if </span><span class="_fadeIn_m1hgl_8">outline </span><span class="_fadeIn_m1hgl_8">is </span><span class="_fadeIn_m1hgl_8">too </span><span class="_fadeIn_m1hgl_8">subtle</span></td>
+      </tr>
+      </tbody>
+      </table>
+          </ul>
+        </div>
+      </div>
+      <div class="uqbs-docs-container">
+        <div class="uqbs-docs-column uqbs-docs-notes">
+          <h3>Notes:</h3>
+          <ul>
+            <li><strong>Meets WCAG 2.2 AA compliance.</strong> Built with <code>aria-labels</code>, <code>roles</code>, and is keyboard compatible for navigation. Keyboard navigation needs patching, see known issues.</li>
+            <li><strong>Full rich text-editor.</strong> Each tab page has its own TinyMCE text editor which supports rich-text editing. Insert images, embed videos, customise tables and more.</li>
+          <li><strong>Reorganise tabs as needed.</strong> Just click and drag the tab ordering in the setup area to reorder the tabs.</li>	
+          <li><strong>Download &amp; Upload as HTML.</strong> You can save each tab individually by clicking on the "Save" button on TinyMCE, and you can upload that same HTML by clicking on "Code" and pasting in the HTML. Nothing proprietary - always open source.</li>	
+          <li><strong>Auto-saving within browser.</strong> Autosaves your work as you go within <code>localStorage</code> on your web browser. You should still save your work as you go, but any changes across all of your tabs are saved to your browser after 5 seconds of inactivity.</li>	
+          </ul>
+        </div>
+        
+        <div class="uqbs-docs-column uqbs-docs-issues">
+          <h3>Known Issues:</h3>
+          <div style="text-align: center; font-size: 0.75rem; color: #999490; margin-top: -10px; padding-bottom: 0.5rem;">i.e. I know these exist, but if I try and fix it then I will 100% break everything. <br> Time cost exceeds benefit in fixing it.</div>
+          <ul>
+            <li><strong>Clear Memory + TinyMCE.</strong> Sometimes when clearing the memory and adding new tabs in, the TinyMCE builder won't load on the second tab. This can be fixed by refreshing the page, or by deleting the tab and reorganising as needed.</li>
+            <li><strong>Keyboard accessibility working but needs highlight function.</strong> This should hopefully be able to be patched in CSS alone, but hold off on production until its fixed.</li>
+            <li><strong>Preview can alter which tab is open first.</strong>&nbsp;In the live preview on the generator page, if you change which tab is currently open when you copy your HTML, that tab will be the tab that is first open.
+                <ul>
+                <li>Not sure why.</li>
+                <li>Not sure how.</li>
+                <li>Not sure if I care to fix it, so let's call if a <span style="white-space: nowrap;">✨ new feature ✨</span> instead.</li>
+                </ul>
+                </li>	
+          </ul>
+        </div>
+        <div class="uqbs-docs-column uqbs-docs-future">
+          <h3>Future Updates:</h3>
+          <ul>
+            <li><strong>Fix keyboard navigation.</strong> ✅ Fixed javascript for keyboard.</li>
+          <li><strong>Fix animations.</strong>  ✅ Fixed animations, currently lumpted into <code>uqbs-tabs-mini-001.js</code></li>
+          <li><strong>Compartmentalise the code.</strong> ✅ Fixed and updated javascript, all inside of <code>uqbs-tabs-mini-001.js</code></li>	
+          <li><strong>Update Copy HTML.</strong> Update the javascript in the builder and the compartmentalised javascript accordingly.</li>	
+          </ul>
+        </div>
+      </div>
+
+
+
+      <!-- END DOCUMENTATION -->
+     </div>
+  </div>
+
+  <!-- Helper to open the settings dialog -->
+  <script>
+    function openStyleSettings() {
+      const dlg = document.getElementById('styleSettingsDialog');
+      if (dlg.showModal) {
+        dlg.showModal();
+      } else {
+        alert('Your browser does not support HTML <dialog>.');
+      }
+    }
+  </script>
+
+  <!-- Delete Confirmation Dialog -->
+  <dialog id="delete-confirm">
+    <form method="dialog">
+      <p>Are you sure you want to delete this tab? This cannot be undone.</p>
+      <menu class="uqbs-btn">
+        <button value="cancel">Cancel</button>
+        <button value="confirm" class="delete-button-confirm">Delete</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <!-- Enable Automatic saving after 5 seconds-->
+  <script>
+  // STORAGE + DEBOUNCE SETUP
+  const STORAGE_KEY = 'uqbsTabGeneratorState';
+  let saveTimer = null;
+  
+  function scheduleSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tabData));
+      console.log('Auto-saved tab state');
+    }, 5000);
+  }
+
+  function restoreState() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    try {
+      tabData = JSON.parse(saved);
+    } catch (e) {
+      console.warn('Couldn’t parse saved state:', e);
+    }
+  }
+
+  /**
+   * Completely clear saved tabs from localStorage,
+   * reset the working data, and redraw everything.
+   */
+  function clearTabMemory() {
+    // 1) Remove from storage
+    localStorage.removeItem(STORAGE_KEY);
+
+    // 2) Reset JS state
+    tabData = [];
+    currentEditorId = 1;
+    activeTabIndex = 0;
+
+    // 3) Re-render UI
+    renderTabs();
+    renderPreview();
+
+    // 4) Close the settings dialog (optional)
+    const dlg = document.getElementById('styleSettingsDialog');
+    if (dlg && dlg.close) dlg.close();
+
+    alert('Tab memory cleared! Refresh your page to apply changes.');
+  }
+</script>
+
+
+  <!-- Generator Logic -->
+  <script>
+    // State
+    let tabData = [];
+    let currentEditorId = 1;
+    let activeTabIndex = 0;
+
+    // CSS Variable Updates
+    function updateCSSVars() {
+      document.documentElement.style.setProperty('--window-height', document.getElementById('window-height').value + 'px');
+      document.documentElement.style.setProperty('--window-width', document.getElementById('window-width').value + 'px');
+      document.documentElement.style.setProperty('--window-bgcolor', document.getElementById('bgcolor').value);
+      document.documentElement.style.setProperty('--navbar-bgcolor', document.getElementById('navbarcolor').value);
+      renderPreview(); // Re-render preview when style changes
+    }
+
+    // Add a new tab to editor
+    function addTab() {
+      const id = `editor-${currentEditorId++}`;
+      const label = `Tab ${tabData.length + 1}`;
+      tabData.push({ id, label, content: '<p>Content for ' + label + '</p>' });
+      renderTabs();
+      renderPreview();
+      scheduleSave();
+      // Sync the toolbar label input
+      document.getElementById('active-tab-label').value = label;
+    }
+
+    // Delete a tab with confirmation
+    function deleteTab(index) {
+      const dialog = document.getElementById('delete-confirm');
+      dialog.showModal();
+      dialog.addEventListener('close', () => {
+        if (dialog.returnValue === 'confirm') {
+          tabData.splice(index, 1);
+          if (activeTabIndex >= tabData.length) activeTabIndex = tabData.length - 1;
+          renderTabs();
+          renderPreview();
+          scheduleSave();
+        }
+      }, { once: true });
+    }
+
+    // Render the editor's tab buttons and panels
+    function renderTabs() {
+      const btns = document.getElementById('editor-tab-buttons');
+      const panels = document.getElementById('editor-tab-panels');
+      btns.innerHTML = '';
+      panels.innerHTML = '';
+
+      // 1) Make sure TinyMCE is torn down and re-initialized 
+      tinymce.remove();
+
+      tabData.forEach((tab, i) => {
+        // Tab button
+        const b = document.createElement('button');
+        b.className = 'editor-tab-button' + (i === activeTabIndex ? ' active' : '');
+        b.textContent = tab.label;
+        b.onclick = () => { activeTabIndex = i; renderTabs(); };
+        btns.appendChild(b);
+
+        // Tab panel
+        const p = document.createElement('div');
+        p.className = 'editor-tab-panel' + (i === activeTabIndex ? ' active' : '');
+        p.innerHTML = `
+          <!-- <div class="tab-label-bar"><label class="tab-label">Tab Label: <input type="text" value="${tab.label}" \
+            oninput="tabData[${i}].label = this.value; renderTabs(); renderPreview();" />
+            <button class="delete-button" onclick="deleteTab(${i})">Delete</button></label>
+            </div>-->
+          <textarea id="${tab.id}" class="vhmin400"></textarea>
+          
+        `;
+        panels.appendChild(p);
+
+        // Initialize TinyMCE for this panel
+        setupTinyMCE('#' + tab.id, tab.content, (newContent) => {
+          tabData[i].content = newContent;
+          renderPreview();
+          scheduleSave();           // ← save 5s after last keystroke
+        });
+      });
+
+      const labelInput = document.getElementById('active-tab-label');
+        if (labelInput) {
+        labelInput.value = tabData[activeTabIndex]?.label || '';
+        }
+
+      // Make buttons draggable
+      Sortable.create(btns, {
+        animation: 150,
+        onEnd: evt => {
+          const [moved] = tabData.splice(evt.oldIndex, 1);
+          tabData.splice(evt.newIndex, 0, moved);
+          activeTabIndex = evt.newIndex;
+          renderTabs();
+          renderPreview();
+          scheduleSave();
+        }
+      });
+    }
+
+    // Initialize tab functionality in the preview
+    function initTabs(container) {
+      const tabs = container.querySelectorAll('.uqbs-tab');
+      const panels = container.querySelectorAll('.uqbs-tab-content');
+      
+      // First make all tabs and panels inactive
+      tabs.forEach(tab => {
+        tab.setAttribute('aria-selected', 'false');
+        tab.setAttribute('tabindex', '-1');
+      });
+      
+      panels.forEach(panel => {
+        panel.setAttribute('aria-hidden', 'true');
+      });
+      
+      // Set first tab as active by default
+      if (tabs.length > 0) {
+        tabs[0].setAttribute('aria-selected', 'true');
+        tabs[0].setAttribute('tabindex', '0');
+        const firstPanelId = tabs[0].getAttribute('aria-controls');
+        const firstPanel = container.querySelector(`#${firstPanelId}`);
+        if (firstPanel) {
+          firstPanel.setAttribute('aria-hidden', 'false');
+        }
+      }
+
+      // Add click event listeners
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const targetPanelId = tab.getAttribute('aria-controls');
+          const targetPanel = container.querySelector(`#${targetPanelId}`);
+          
+          // Reset all tabs and panels
+          tabs.forEach(t => {
+            t.setAttribute('aria-selected', 'false');
+            t.setAttribute('tabindex', '-1');
+          });
+          panels.forEach(p => p.setAttribute('aria-hidden', 'true'));
+
+          // Activate clicked tab and its panel
+          tab.setAttribute('aria-selected', 'true');
+          tab.setAttribute('tabindex', '0');
+          if (targetPanel) {
+            targetPanel.setAttribute('aria-hidden', 'false');
+          }
+        });
+      });
+    }
+
+    // Render the live preview
+    function renderPreview() {
+      const preview = document.getElementById('live-preview');
+      if (!tabData.length) {
+        preview.innerHTML = '<p>No tabs yet. Add one to get started.</p>';
+        return;
+      }
+      
+      let html = '<div class="uqbs-tab-body">'
+               + '<div class="uqbs-tab-container">'
+               + '<div class="uqbs-tabs" role="tablist" aria-label="Tab selection">';
+
+
+
+      // Generate tab buttons
+      tabData.forEach((tab, i) => {
+        html += `<button class="uqbs-tab" role="tab" aria-selected="${i===0 ? 'true' : 'false'}"` 
+             + ` aria-controls="panel-${i}" id="tab-${i}"` 
+             + ` tabindex="${i===0 ? 0 : -1}">${tab.label}</button>`;
+      });
+      
+      html += '<div class="uqbs-tab-indicator" aria-hidden="true"></div></div>'; // Close tabs container
+      
+      // Generate tab content panels
+      tabData.forEach((tab, i) => {
+        html += `<div class="uqbs-tab-content" role="tabpanel" id="panel-${i}"` 
+             + ` aria-labelledby="tab-${i}" aria-hidden="${i!==0 ? 'true' : 'false'}">`
+             + tab.content
+             + '</div>';
+      });
+
+      html += '</div></div>'; // Close tab container and body
+      preview.innerHTML = html;
+
+      // Initialize tab functionality in the preview
+      setTimeout(() => {
+        initTabs(preview);
+      }, 100);
+    }
+
+    // Copy HTML to clipboard with necessary CSS/JS references
+    function copyHTML() {
+      // Get the inner HTML of the preview
+      const tabContent = document.getElementById('live-preview').innerHTML;
+      
+      // Create the complete HTML with required CSS and JS sources
+      // Now we include the tab initialization script directly in the output
+      const completeHTML = `
+<!-- This block was generated on UQ IBIS: https://uq-business-school.github.io/ibis/ -->
+<!-- © Geoffrey Blazer, 2025. CC BY-NC 4.0 International License. -->
+<!-- This software is provided "as-is" without warranty of any kind. -->
+<!-- DO NOT CONTACT CENTRAL ELEARNING FOR SUPPORT ABOUT THIS ITEM - IT IS NOT SUPPORTED. -->
+<!-- You can generate your own block by visiting: https://uq-business-school.github.io/ibis/ -->
+
+<!-- UQ Tabs Component -->
+<!-- Required CSS -->
+<link rel='stylesheet' href='https://uq-business-school.github.io/ibis/templates/interactive/tabs/uqbs-tabs.css' \/>
+<link rel='stylesheet' media='all' href='https://uq-business-school.github.io/styleguide/css/superstyle.css' \/>
+
+${tabContent}
+
+<!-- Inline Tab Functionality -->
+<script src="https://uq-business-school.github.io/ibis/templates/interactive/tabs/uqbs-tabs-mini.js"><\/script>
+
+`;
+      
+      navigator.clipboard.writeText(completeHTML).then(() => {
+        alert('Complete HTML copied to clipboard with required CSS and inline JS!');
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+        alert('Failed to copy HTML: ' + err.message);
+      });
+    }
+
+    // Initialize with first tab
+    window.onload = () => {
+        updateCSSVars();
+        restoreState();                  // ← bring back your draft, if any
+
+        if (tabData.length === 0) {
+            addTab();                     // ← first-time run: create Tab1
+        } else {
+            renderTabs();
+            renderPreview();              // ← if you had tabs, re-draw them
+        }
+    };
+  </script>
+</body>
+</html>
