@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Colour Palette Generator with CSS Output</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      background: #f5f5f5;
+    }
+    input, select, button {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin: 0.5rem 0.5rem 0.5rem 0;
+    }
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .swatch {
+      padding: 1rem;
+      color: white;
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+    }
+    pre {
+      background: #1e1e1e;
+      color: #dcdcdc;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    .copy-button {
+      margin-top: 0.5rem;
+      padding: 0.4rem 1rem;
+      font-size: 1rem;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .copy-button:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Colour Generator + CSS Export</h1>
+  <span style="font-size: 0.6rem">*NOTE: HEX code must start with '#'</span><br>
+  <label>Base Colour*: 
+    <input type="text" id="baseColor" value="#51247A" placeholder="e.g. #962a8b"> <!-- or rgb(150,42,139) -->
+  </label>
+  <label>Lock at weight:
+    <select id="lockWeight">
+      <option>50</option><option>100</option><option>200</option><option>300</option><option>400</option>
+      <option selected>500</option>
+      <option>600</option><option>700</option><option>800</option><option>900</option><option>950</option>
+    </select>
+  </label>
+  <label>Variable Name:
+    <input type="text" id="varPrefix" placeholder="e.g. uq-light-purple" value="uq-purple">
+  </label>
+  <button onclick="generatePalette()">Generate</button>
+
+  <div class="palette" id="palette"></div>
+
+  <h2 style="margin-top: 2rem; padding-bottom: 0;">CSS Output:</h2>
+  <pre id="cssOutput"></pre>
+  <button class="copy-button" onclick="copyCSS()">Copy to Clipboard</button>
+
+  <script>
+    const weights = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+
+    function parseColor(input) {
+      input = input.trim();
+      if (input.startsWith('#')) {
+        let hex = input.slice(1);
+        if (hex.length === 3) {
+          hex = hex.split('').map(c => c + c).join('');
+        }
+        const bigint = parseInt(hex, 16);
+        return {
+          r: (bigint >> 16) & 255,
+          g: (bigint >> 8) & 255,
+          b: bigint & 255
+        };
+      } else if (input.startsWith('rgb')) {
+        const [r, g, b] = input.match(/\d+/g).map(Number);
+        return { r, g, b };
+      } else {
+        throw new Error('Unsupported colour format');
+      }
+    }
+
+    function toHex({ r, g, b }) {
+      const hex = (v) => v.toString(16).padStart(2, '0');
+      return `#${hex(r)}${hex(g)}${hex(b)}`;
+    }
+
+    function interpolateColor(c1, c2, t) {
+      return {
+        r: Math.round(c1.r + (c2.r - c1.r) * t),
+        g: Math.round(c1.g + (c2.g - c1.g) * t),
+        b: Math.round(c1.b + (c2.b - c1.b) * t),
+      };
+    }
+
+    function generatePalette() {
+      const input = document.getElementById('baseColor').value;
+      const lockedWeight = parseInt(document.getElementById('lockWeight').value);
+      const prefix = document.getElementById('varPrefix').value.trim().replace(/^--/, '').replace(/\s+/g, '-');
+
+      const baseColor = parseColor(input);
+      const white = { r: 255, g: 255, b: 255 };
+      const black = { r: 0, g: 0, b: 0 };
+
+      const lockIndex = weights.indexOf(lockedWeight);
+      const totalBelow = lockIndex;
+      const totalAbove = weights.length - lockIndex - 1;
+
+      const colors = [];
+
+      for (let i = 0; i < lockIndex; i++) {
+        const t = 1 - (i + 1) / (totalBelow + 1);
+        colors[i] = interpolateColor(baseColor, white, t);
+      }
+
+      function relativeLuminance({ r, g, b }) {
+        const toLinear = (c) => {
+            c /= 255;
+            return c <= 0.03928 ? c / 12.92 : Math.pow(((c + 0.055) / 1.055), 2.4);
+        };
+        const R = toLinear(r);
+        const G = toLinear(g);
+        const B = toLinear(b);
+        return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+        }
+
+        function contrastRatio(c1, c2) {
+        const L1 = relativeLuminance(c1);
+        const L2 = relativeLuminance(c2);
+        return ((Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05)).toFixed(2);
+
+        // Set demo cards dynamically
+            const lockedHex = toHex(colors[lockIndex]);
+            const textColor = pickAccessibleText(colors[lockIndex]);
+
+            document.querySelector('.democard1').style.backgroundColor = `var(--${prefix}-500)`;
+            document.querySelector('.democard1').style.color = textColor;
+
+            document.querySelector('.democard2').style.backgroundColor = `var(--${prefix}-950)`;
+            document.querySelector('.democard2').style.color = pickAccessibleText(colors[weights.indexOf(950)]);
+
+            // Optional: Use 100 weight for border or accent
+            document.querySelector('.democard1').style.borderColor = `var(--${prefix}-100)`;
+            document.querySelector('.democard2').style.borderColor = `var(--${prefix}-100)`;    
+        }
+
+      colors[lockIndex] = baseColor;
+
+      for (let i = lockIndex + 1; i < weights.length; i++) {
+        const t = (i - lockIndex) / (totalAbove + 1);
+        colors[i] = interpolateColor(baseColor, black, t);
+      }
+
+      // Render swatches
+      const palette = document.getElementById('palette');
+      palette.innerHTML = "";
+      for (let i = 0; i < weights.length; i++) {
+        const hex = toHex(colors[i]);
+        const swatch = document.createElement('div');
+        swatch.className = 'swatch';
+        swatch.style.backgroundColor = hex;
+        const contrastWithWhite = contrastRatio(colors[i], { r: 255, g: 255, b: 255 });
+        const contrastWithBlack = contrastRatio(colors[i], { r: 0, g: 0, b: 0 });
+
+        function getWcagBadge(ratio) {
+        return `
+            <div style="font-size: 0.6rem; margin-top: 0.25rem;">
+            <ul>    
+            <li>AA: ${ratio >= 4.5 ? '✅' : '❌'}</li> 
+            <li>AA Large: ${ratio >= 3 ? '✅' : '❌'}</li>
+            <li>AAA: ${ratio >= 7 ? '✅' : '❌'}</li>
+            </ul>
+            </div>
+        `;
+        }
+
+        swatch.innerHTML = `
+        <div>${weights[i]}</div>
+        <div>${hex}</div>
+        <div class="color-wcag-heading flex-container">
+            <div class="flex-items white">
+            <span>White</span>
+            ${getWcagBadge(contrastWithWhite)}
+            </div>
+            <div class="flex-items black">
+            <span>Black</span>
+            ${getWcagBadge(contrastWithBlack)}
+            </div>
+        </div>
+        `;
+
+        palette.appendChild(swatch);
+      }
+
+      // In demo cards, auto change text color
+      function pickAccessibleText(bgColor) {
+        const contrastWhite = contrastRatio(bgColor, { r: 255, g: 255, b: 255 });
+        const contrastBlack = contrastRatio(bgColor, { r: 0, g: 0, b: 0 });
+
+        //// Prioritise AAA, then AA, fallback to higher contrast
+        if (contrastWhite >= 7) return 'white';
+        if (contrastBlack >= 7) return 'black';
+        if (contrastWhite >= 4.5) return 'white';
+        if (contrastBlack >= 4.5) return 'black';
+        return contrastWhite > contrastBlack ? 'white' : 'black';
+        }
+
+      // Generate CSS output
+      let css = `:root {\n`;
+      for (let i = 0; i < weights.length; i++) {
+        const hex = toHex(colors[i]);
+        const comment = weights[i] === lockedWeight ? ' /* Locked weight */' : '';
+        css += `  --${prefix}-${weights[i]}: ${hex};${comment}\n`;
+      }
+      css += `}`;
+
+      // Set demo card gradient variables from generated colors
+        document.documentElement.style.setProperty('--grad1-500', toHex(colors[lockIndex]));
+        document.documentElement.style.setProperty('--grad2-500a', toHex(colors[lockIndex]));
+        document.documentElement.style.setProperty('--grad2-500b', toHex(colors[lockIndex]));
+        document.documentElement.style.setProperty('--grad2-950a', toHex(colors[weights.indexOf(950)]));
+
+
+        // Also assign fallback text colours based on contrast
+        document.documentElement.style.setProperty('--text-color', pickAccessibleText(colors[lockIndex]));
+        document.documentElement.style.setProperty('--text-color2', pickAccessibleText(colors[weights.indexOf(950)]));
+        document.documentElement.style.setProperty('--accent', `var(--${prefix}-100)`);
+
+
+      document.getElementById('cssOutput').textContent = css;
+    }
+
+    function copyCSS() {
+      const cssText = document.getElementById('cssOutput').textContent;
+      navigator.clipboard.writeText(cssText).then(() => {
+        alert('CSS copied to clipboard!');
+      });
+    }
+  </script>
+
+<style>
+.color-wcag-heading{
+    font-size:0.8rem; margin-top:0.25rem;
+}
+.white{
+    color: white;
+    text-align: center;
+    border: 1px solid white;
+}
+.black{
+    color: black;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: normal;
+  align-items: normal;
+  align-content: normal;
+  gap: 0.3rem;
+}
+.flex-items ul{
+    text-decoration: none;
+    list-style: none;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.flex-items:nth-child(1) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: stretch;
+  order: 0;
+}
+
+.flex-items:nth-child(2) {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: stretch;
+  order: 0;
+}
+
+.democardshelf{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  align-content: stretch;
+  gap: 1rem;
+}
+.democarditem{
+    display: block;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: auto;
+    align-self: auto;
+    order: 0;
+}
+.democard1 {
+  border: 1px solid var(--accent, #ccc);
+  padding: 20px;
+  border-radius: 32px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  height: 300px;
+  width: 200px;
+  display: block;
+  color: var(--text-color, #000);
+  background-image: linear-gradient(
+    to top,
+    var(--grad1-500, rgb(120, 72, 137)) 0%,
+    transparent 40%
+  );
+}
+
+.democard2 {
+  border: 1px solid var(--accent, #ccc);
+  padding: 20px;
+  border-radius: 32px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  height: 300px;
+  width: 200px;
+  display: block;
+  color: var(--text-color2, #fff);
+  background:
+    radial-gradient(
+      circle farthest-corner at bottom right,
+      var(--grad2-950a) 0%,
+      var(--grad2-500a) 16%,
+      var(--grad2-950a) 100%
+    ),
+    radial-gradient(
+      circle farthest-corner at top right,
+      var(--grad2-500b) 0%,
+      var(--grad2-500a) 8%,
+      var(--grad2-950a) 60%
+    );
+}
+
+
+</style>
+
+<div class="democardshelf">
+    <div class="democard1 democarditem">
+        <h3 style="color:#000;">Demo card</h3>
+        <p style="color:#000;">This is a demo card to show how the generated colors can be used in a real-world scenario.</p>
+    </div>
+
+    <div class="democard2 democarditem">
+        <h3>Demo card</h3>
+        <p>This is a demo card to show how the generated colors can be used in a real-world scenario.</p>
+    </div>
+</div>
+
+</body>
+</html>
