@@ -83,108 +83,139 @@
    	<p>Enter an 8-digit course code (e.g. <code>ABCD1234</code>)</p>
 		<input type="text" id="courseCode" placeholder="ABCD1234">
 	</div>  
-
+    <div class="uqbs-divider-dotted"></div>	
+    <div class="uq-container">
+        <h5>Updates:</h5>
+        <ul>
+            <li><strong>9 June 2025</strong> - The button will now automatically try and find the corresponding course profile link. If it can't detect a course code based on the file location, it will revert to the provided course code in the form.</li>
+        </ul>
+    </div>
   
 </div>
 
+<!-- 
+## IBIS Code Generator. 
+## Generate your own code at: https://uq-business-school.github.io/ibis/
+## DO NOT CONTACT CENTRAL ELEARNING FOR SUPPORT - THIS CUSTOM CODE IS NOT CENTRALLY SUPPORTED
+## FOR BUSINESS SCHOOL COURSES, CONTACT: elearning@business.uq.edu.au
+## Created by Geoffrey Blazer, 2025. CC BY-NC 4.0
+-->
+
+
 <script>
-/**
- * This template includes:
- *  - <link> references for styles
- *  - <script> reference for AOS
- *  - The reading list button and fallback link
- * 
- * We use %%COURSE_CODE%% as a placeholder to be replaced at runtime.
- * Note: Mind the trailing spaces so you don't get extended underlines!
- */
-const snippetTemplate = `<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Course Profile Link Generator</title>
-
-  <!-- Standard UQ Style Sheets -->
-  <link rel="stylesheet" media="all" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
-
-  <!-- ANIMATE IT! (AOS) -->
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"><\/script>
-
-  <style>
-    .uq-button {color: #fff;}
-    .bb-link-hover {background-color: transparent!important;}
-  </style>
-</head>
-<body>
-
-  <div class="uq-container">
-    <a class="uq-button uq-button--large uq-button--expand"
-       href="https://programs-courses.uq.edu.au/course.html?course_code=%%COURSE_CODE%%" target="_blank">
-      <span class="uq-icon uq-icon--how-youll-learn--seo-search-page"></span>
-      View Course Profile
-    </a>
-    <p class="text-center" style="margin-top: 8px;">
-      Note: If the button above is not working, try using the following link:
-      <a class="bb-link-hover" href="https://programs-courses.uq.edu.au/course.html?course_code=%%COURSE_CODE%%" target="_blank">https://programs-courses.uq.edu.au/course.html?course_code=%%COURSE_CODE%%</a>
-    </p>
-  </div>
-
-</body>
-</html>`;
-
-
-/**
- * Updates the preview iframe with the current snippet, so it reflects
- * whatever course code has been typed.
- */
-function updatePreview() {
-  const rawCode = document.getElementById("courseCode").value.trim();
-
-  // If we don't have exactly 8 characters, show a placeholder or an empty preview
-  if (rawCode.length !== 8) {
-    document.getElementById("previewFrame").srcdoc = "<p style='text-align:center;font-family:sans-serif;margin-top:50px;'>Enter an 8-digit code to see a preview.</p>";
-    return;
-  }
-
-  // Convert to lower-case for the final snippet
-  const courseCode = rawCode.toLowerCase();
-
-  // Replace placeholders in the template
-  const finalSnippet = snippetTemplate.replace(/%%COURSE_CODE%%/g, courseCode);
-
-  // Show it in the iframe
-  document.getElementById("previewFrame").srcdoc = finalSnippet;
-}
-
-function copySnippet() {
-  const rawCode = document.getElementById("courseCode").value.trim();
-  if (rawCode.length !== 8) {
-    alert("Please enter an 8-digit course code (e.g. ABCD1234).");
-    return;
-  }
-  const courseCode = rawCode.toLowerCase();
-  const finalSnippet = snippetTemplate.replace(/%%COURSE_CODE%%/g, courseCode);
-  navigator.clipboard.writeText(finalSnippet).then(() => {
-    alert("Complete HTML snippet copied to clipboard!");
-  }).catch(err => {
-    alert("Error copying snippet: " + err);
-  });
-}
-
-// Check localStorage for a saved course code on page load.
-document.addEventListener("DOMContentLoaded", function() {
-  const storedCode = localStorage.getItem("courseCode");
-  if (storedCode) {
-    document.getElementById("courseCode").value = storedCode;
-    updatePreview();
-  }
-});
-
-// Update preview whenever the user types or changes the input
-document.getElementById("courseCode").addEventListener("input", updatePreview);
-
-// Initialize the preview on page load (shows placeholder if no code typed yet)
-updatePreview();
-</script>
+    /**
+     * This template includes:
+     *  - <link> references for styles
+     *  - <script> reference for AOS
+     *  - The course profile auto-detect button + fallback link
+     * 
+     * We use %%COURSE_CODE%% as a placeholder to be replaced at runtime.
+     * Note: Mind the trailing spaces so you don't get extended underlines!
+     */
+    const snippetTemplate = (rawCode) => `
+    <!doctype html>
+    <!-- 
+    ## IBIS Code Generator. 
+    ## Generate your own code at: https://uq-business-school.github.io/ibis/
+    ## DO NOT CONTACT CENTRAL ELEARNING FOR SUPPORT - THIS CUSTOM CODE IS NOT CENTRALLY SUPPORTED
+    ## FOR BUSINESS SCHOOL COURSES, CONTACT: elearning@business.uq.edu.au
+    ## Credit: Geoffrey Blazer, 2025. License: CC BY-NC 4.0 International.
+    -->
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Course Profile Auto Link</title>
+      <link rel="stylesheet" media="all" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+      <style>
+        .uq-button {color: #fff;}
+        .bb-link-hover {background-color: transparent!important;}
+      </style>
+    </head>
+    <body>
+      <div class="uq-container">
+        <a id="profileLink" class="uq-button uq-button--large uq-button--expand" href="#" target="_blank">
+          <span class="uq-icon uq-icon--how-youll-learn--seo-search-page"></span>
+          View Course Profile
+        </a>
+        <p class="text-center" style="margin-top: 8px;">
+          If the button doesn't work, try this link:
+          <a id="fallbackLink" class="bb-link-hover" href="#" target="_blank"></a>
+        </p>
+      </div>
+    
+      <script>
+        (function() {
+          const rawCode = "${rawCode.toLowerCase()}";
+          const fallbackURL = "https://programs-courses.uq.edu.au/course.html?course_code=" + rawCode;
+          
+          const profileLink = document.getElementById("profileLink");
+          const fallbackLink = document.getElementById("fallbackLink");
+    
+          // Always set fallback link to programs-courses
+          fallbackLink.href = fallbackURL;
+          fallbackLink.textContent = fallbackURL;
+    
+          // Try to auto-detect full profile link from path
+          const match = window.location.href.match(/\\/courses\\/([^\\/]+)\\//);
+          if (match) {
+            const [course, classCode, semester] = match[1].split("_");
+            if (course && classCode && semester) {
+              const directURL = \`https://course-profiles.uq.edu.au/course-profiles/\${course}-\${classCode}-\${semester}\`;
+              profileLink.href = directURL;
+              return;
+            }
+          }
+    
+          // Fallback for button
+          profileLink.href = fallbackURL;
+        })();
+      <\/script>
+    </body>
+    </html>`;
+    
+    
+    /** Updates the preview frame with the current HTML snippet */
+    function updatePreview() {
+      const input = document.getElementById("courseCode").value.trim();
+      const frame = document.getElementById("previewFrame");
+    
+      if (input.length !== 8) {
+        frame.srcdoc = "<p style='text-align:center;font-family:sans-serif;margin-top:50px;'>Enter an 8-digit code to see a preview.</p>";
+        return;
+      }
+    
+      const finalSnippet = snippetTemplate(input);
+      frame.srcdoc = finalSnippet;
+    }
+    
+    
+    /** Copies the full HTML snippet with embedded detection to clipboard */
+    function copySnippet() {
+      const rawCode = document.getElementById("courseCode").value.trim();
+      if (rawCode.length !== 8) {
+        alert("Please enter an 8-digit course code (e.g. ABCD1234).");
+        return;
+      }
+    
+      const finalSnippet = snippetTemplate(rawCode);
+      navigator.clipboard.writeText(finalSnippet).then(() => {
+        alert("Complete HTML snippet copied to clipboard!");
+      }).catch(err => {
+        alert("Error copying snippet: " + err);
+      });
+    }
+    
+    
+    document.addEventListener("DOMContentLoaded", function () {
+      const storedCode = localStorage.getItem("courseCode");
+      if (storedCode) {
+        document.getElementById("courseCode").value = storedCode;
+      }
+      updatePreview();
+    });
+    
+    document.getElementById("courseCode").addEventListener("input", updatePreview);
+    </script>
 
 </body>
 </html>
