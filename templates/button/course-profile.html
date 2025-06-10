@@ -160,7 +160,7 @@
           if (match) {
             const [course, classCode, semester] = match[1].split("_");
             if (course && classCode && semester) {
-              const directURL = \`https://course-profiles.uq.edu.au/course-profiles/\${course}-\${classCode}-\${semester}\`;
+              const directURL = \`https://course-profiles.uq.edu.au/course-profiles/\${course}-\${semester}-\${classCode}\`;
               profileLink.href = directURL;
               return;
             }
