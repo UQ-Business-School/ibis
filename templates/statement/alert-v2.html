@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Alerts, V9</title>
+  <!-- Existing stylesheet -->
+  <link rel="stylesheet" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+  <!-- Generator UI styles -->
+  <link rel="stylesheet" href="https://uq-business-school.github.io/ibis/templates/interactive/tabs/uqbs-tabs-generator.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- AOS -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <!-- TinyMCE -->
+  <script src="https://uq-business-school.github.io/ibis/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+  <!-- TinyMCE config -->
+  <script src="https://uq-business-school.github.io/ibis/templates/interactive/tabs/tinymce.config.js"></script>
+  
+  <style>
+    /* All your existing CSS remains unchanged */
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+    .uqgenerator-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      border: 1px solid #CDCDCD;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: #555;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .preview-container {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px dashed #CDCDCD;
+    }
+    button {
+      padding: 10px;
+      background-color: #51247a;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .icon-button {
+      vertical-align: middle;
+      background: none;
+      border: 1px solid #CDCDCD;
+      color: #555;
+      line-height: 1.6;
+      width: 100%;
+      cursor: pointer;
+    }
+    .icon-button svg {
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      fill: #51247a;
+      margin-right: 8px;
+      line-height: 1.6;
+    }
+    code{
+      background-color: #E8E8E8;
+      border-radius: 4px;
+    }
+    .preview-color-button{
+      display: block;
+      height: 16px;
+      width: 16px;
+      border-radius: 4px;
+    }
+    .color-row{
+      display: flex;
+      width: 100%;
+      margin: 10px 0;
+      align-items: center;
+      gap: 10px;
+      vertical-align: middle;
+    }
+    .color-row button{
+      border: 1px solid #262626;
+      color: #262626;
+      border-radius: 4px;
+    }
+    .uq-alert__message {
+      font-size: .875rem;
+      font-weight: 300;
+      line-height: 1.4;
+      margin-left: 2rem;
+      padding: 1rem;
+      position: relative;
+    }
+    .uqbs-alert--info{
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.25' stroke='%232b2a29' stroke-width='1.5' transform='rotate(-180 12 12)'/%3E%3Cpath stroke='%232b2a29' stroke-linecap='round' stroke-width='1.5' d='M12 16.2v-4'/%3E%3Ccircle cx='12' cy='8.4' r='1.1' fill='%232b2a29' transform='rotate(-180 12 8.4)'/%3E%3C/svg%3E");
+      font-size: 1.2rem;
+      background-repeat: no-repeat;
+      background-position: center center;
+      font-weight: 300;
+      line-height: 1.6;
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+      color: #000;
+      display: inline-block;
+      height: .9rem;
+      width: .9rem;
+    }
+    .uqbs-alert--success{
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.25' stroke='%232b2a29' stroke-width='1.5'/%3E%3Cpath stroke='%232b2a29' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M7 12.867 9.6 16l6.733-8'/%3E%3C/svg%3E");
+      font-size: 1.2rem;
+      background-repeat: no-repeat;
+      background-position: center center;
+      font-weight: 300;
+      line-height: 1.6;
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+      color: #000;
+      display: inline-block;
+      height: .9rem;
+      width: .9rem;
+    }
+    .uqbs-alert--warning {
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.25' stroke='%232b2a29' stroke-width='1.5'/%3E%3Cpath stroke='%232b2a29' stroke-linecap='round' stroke-width='1.5' d='M12 7.8v4'/%3E%3Ccircle cx='11.9' cy='15.6' r='.6' fill='%232b2a29' stroke='%232b2a29'/%3E%3C/svg%3E");
+      font-size: 1.2rem;
+      background-repeat: no-repeat;
+      background-position: center center;
+      font-weight: 300;
+      line-height: 1.6;
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+      color: #000;
+      display: inline-block;
+      height: .9rem;
+      width: .9rem;
+    }
+    .uqbs-alert--error {
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%232b2a29' stroke-width='1.5' d='M20.127 18.545a1.18 1.18 0 0 1-1.055 1.706H4.929a1.18 1.18 0 0 1-1.055-1.706l7.072-14.143a1.179 1.179 0 0 1 2.109 0z'/%3E%3Cpath stroke='%232b2a29' stroke-linecap='round' stroke-width='1.5' d='M12 9v4'/%3E%3Ccircle cx='11.9' cy='16.601' r='1.1' fill='%232b2a29'/%3E%3C/svg%3E");
+      font-size: 1.2rem;
+      background-repeat: no-repeat;
+      background-position: center center;
+      font-weight: 300;
+      line-height: 1.6;
+      margin-left: 0.3rem;
+      margin-right: 0.5rem;
+      color: #000;
+      display: inline-block;
+      height: .9rem;
+      width: .9rem;
+    }
+    
+    /* Additional styles for TinyMCE integration */
+    .tinymce-container {
+      margin-bottom: 20px;
+    }
+    
+    /* Auto-save indicator */
+    .auto-save-indicator {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    
+    .auto-save-indicator.saving {
+      color: #f39c12;
+    }
+    
+    .auto-save-indicator.saved {
+      color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+  <div class="uq-container"> 
+    <div class="uqgenerator-container">
+      <!-- Live Preview Section -->
+      <div id="preview" class="preview-container"></div>
+
+      <!-- Input Fields -->
+      <label>Statement Text</label>
+      <p>You can read more about alerts in the information document: <a href="https://uqgblaze.github.io/bingen/templates/statement/alert-info.html" target="_blank">https://uqgblaze.github.io/bingen/templates/statement/alert-info.html</a></p>
+      <p>Use the rich text editor below to format your text. The editor supports bold text, line breaks, and other formatting options.</p>
+      
+      <div class="tinymce-container">
+        <textarea id="statementText" placeholder="Enter text here"><b>This is an alert box</b>. <br> Fill your text in here, then click on the <b>copy</b> button below.</textarea>
+        <div id="autoSaveIndicator" class="auto-save-indicator">Auto-save: Ready</div>
+      </div>
+    
+      <label>Change color</label>
+      <p>Click on the colors below to change the colors:</p>
+      <!-- Row 1 -->
+      <div class="color-row">
+        <button id="bg-black" class="uq-alert--info"><span class="uqbs-alert--info"></span>Info Blue</button>
+        <button id="bg-white" class="uq-alert--success"><span class="uqbs-alert--success"></span>Success Green</button>
+        <button id="bg-purple" class="uq-alert--warning"><span class="uqbs-alert--warning"></span>Warning Yellow</button>
+        <button id="bg-light-purple" class="uq-alert--error"><span class="uqbs-alert--error"></span>Error Red</button> 		
+      </div>
+
+      <br>
+      <button class="uq-button uq-button--large uq-button--expand" onclick="copyToClipboard()">
+        <span class="uq-icon uq-icon--standard--common-file-double"></span>
+        Copy to Clipboard
+      </button>
+    </div>
+  </div>
+
+  <!-- Style sheet - to be applied to master version: uqbs-bsan.css -->
+  <style>
+    .uqbs-font-weight-normal{
+      font-weight: 400;
+    }
+    .uqbs-font-weight-normal b, .uqbs-font-weight-normal strong{
+      font-weight: bolder;
+    }
+    .uqbs-font-weight-heavy{
+      font-weight: bolder;
+    }
+  </style>	
+  
+  <!-- Inline Preview & Clipboard Script (custom per generator) -->
+  <script>
+    // Global variables
+    let currentBgClasses = "uq-alert--info";
+    let autoSaveTimer = null;
+    let tinyMCEEditor = null;
+    const AUTO_SAVE_DELAY = 5000; // 5 seconds
+    const LOCAL_STORAGE_KEY = "IBISAlertsGenerator";
+
+    // Load saved content from localStorage
+    function loadSavedContent() {
+      try {
+        const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (saved) {
+          const data = JSON.parse(saved);
+          if (data.content) {
+            document.getElementById('statementText').value = data.content;
+            if (data.bgClasses) {
+              currentBgClasses = data.bgClasses;
+            }
+            updateAutoSaveIndicator('loaded');
+          }
+        }
+      } catch (e) {
+        console.error('Error loading saved content:', e);
+      }
+    }
+
+    // Save content to localStorage
+    function saveToLocalStorage() {
+      try {
+        const content = tinyMCEEditor ? tinyMCEEditor.getContent() : document.getElementById('statementText').value;
+        const data = {
+          content: content,
+          bgClasses: currentBgClasses,
+          timestamp: new Date().toISOString()
+        };
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+        updateAutoSaveIndicator('saved');
+      } catch (e) {
+        console.error('Error saving content:', e);
+        updateAutoSaveIndicator('error');
+      }
+    }
+
+    // Update auto-save indicator
+    function updateAutoSaveIndicator(status) {
+      const indicator = document.getElementById('autoSaveIndicator');
+      const now = new Date().toLocaleTimeString();
+      
+      switch(status) {
+        case 'saving':
+          indicator.textContent = 'Auto-save: Saving...';
+          indicator.className = 'auto-save-indicator saving';
+          break;
+        case 'saved':
+          indicator.textContent = `Auto-save: Saved at ${now}`;
+          indicator.className = 'auto-save-indicator saved';
+          break;
+        case 'loaded':
+          indicator.textContent = 'Auto-save: Previous content loaded';
+          indicator.className = 'auto-save-indicator saved';
+          break;
+        case 'error':
+          indicator.textContent = 'Auto-save: Error saving';
+          indicator.className = 'auto-save-indicator';
+          break;
+        default:
+          indicator.textContent = 'Auto-save: Ready';
+          indicator.className = 'auto-save-indicator';
+      }
+    }
+
+    // Trigger auto-save with delay
+    function triggerAutoSave() {
+      updateAutoSaveIndicator('saving');
+      
+      // Clear existing timer
+      if (autoSaveTimer) {
+        clearTimeout(autoSaveTimer);
+      }
+      
+      // Set new timer
+      autoSaveTimer = setTimeout(() => {
+        saveToLocalStorage();
+      }, AUTO_SAVE_DELAY);
+    }
+
+    function updatePreview() {
+      const content = tinyMCEEditor ? tinyMCEEditor.getContent() : document.getElementById('statementText').value;
+      const previewHtml = `
+        <body>
+          <div class="uq-alert uqbs-rounded-border--all ${currentBgClasses}" role="note" data-aos="zoom-in" style="width: 80%; margin: 0 auto;">
+            <div class="uq-alert__message">
+              <span>${content}</span>
+            </div>	
+          </div>	
+        </body>
+      `;
+      document.getElementById('preview').innerHTML = previewHtml;
+      AOS.init({ duration: 1200, offset: 50 });
+    }
+
+    // Expose updatePreview globally
+    window.updatePreview = updatePreview;
+
+    function copyToClipboard() {
+      const previewClone = document.getElementById('preview').cloneNode(true);
+      previewClone.querySelectorAll('.aos-init, .aos-animate').forEach(el => {
+        el.classList.remove('aos-init');
+        el.classList.remove('aos-animate');
+      });
+      const htmlToCopy = `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Statement C</title>
+  <link rel="stylesheet" media="all" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"><\/script>
+</head>  
+<body>  
+${previewClone.innerHTML}
+<script>
+AOS.init({
+  duration: 1200,
+  offset: 50
+})
+<\/script>  
+</body>
+</html>`;
+      navigator.clipboard.writeText(htmlToCopy).then(() => {
+        alert('Copied to clipboard!');
+      }).catch(err => {
+        alert('Error copying: ' + err);
+      });
+    }
+
+    // Initialize TinyMCE
+    function initializeTinyMCE() {
+      // Load saved content first
+      loadSavedContent();
+      
+      // Add some debugging
+      console.log('TinyMCE available:', typeof tinymce !== 'undefined');
+      console.log('initTinyMCE function available:', typeof initTinyMCE === 'function');
+      
+      // Wait for the shared config to be available, with timeout
+      let attempts = 0;
+      const maxAttempts = 50; // 5 seconds max wait
+      
+      function waitForSharedConfig() {
+        attempts++;
+        console.log(`Attempt ${attempts}: Checking for shared config...`);
+        
+        if (typeof initTinyMCE === 'function') {
+          console.log('Found shared config, initializing...');
+          // Initialize TinyMCE with the shared configuration
+          tinyMCEEditor = initTinyMCE('statementText', {
+            setup: function(editor) {
+              editor.on('input change', function() {
+                updatePreview();
+                triggerAutoSave();
+              });
+            },
+            init_instance_callback: function(editor) {
+              tinyMCEEditor = editor;
+              updatePreview();
+              
+              // Set saved content if available
+              try {
+                const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+                if (saved) {
+                  const data = JSON.parse(saved);
+                  if (data.content) {
+                    editor.setContent(data.content);
+                    updatePreview();
+                  }
+                }
+              } catch (e) {
+                console.error('Error setting saved content:', e);
+              }
+            }
+          });
+        } else if (attempts < maxAttempts) {
+          // Wait and try again
+          setTimeout(waitForSharedConfig, 100);
+        } else {
+          console.error('Shared config not found after 5 seconds, may be a cross-origin issue');
+          updateAutoSaveIndicator('error');
+        }
+      }
+      
+      waitForSharedConfig();
+    }
+
+    // Attach event listeners to color buttons
+    document.querySelectorAll("button[id^='bg-']").forEach(button => {
+      button.addEventListener("click", function() {
+        currentBgClasses = button.className;
+        updatePreview();
+        triggerAutoSave();
+      });
+    });
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeTinyMCE();
+      AOS.init({ duration: 1200, offset: 50 });
+    });
+
+    // Save before page unload
+    window.addEventListener('beforeunload', function() {
+      if (autoSaveTimer) {
+        clearTimeout(autoSaveTimer);
+        saveToLocalStorage();
+      }
+    });
+  </script>
+
+</body>
+</html>
