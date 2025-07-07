@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Alerts, V12</title>
+  <title>Alerts, V13</title>
   <!-- Existing stylesheet -->
   <link rel="stylesheet" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
   <!-- Generator UI styles -->
@@ -194,7 +194,14 @@
   <div class="uq-container"> 
     <div class="uqgenerator-container">
       <!-- Live Preview Section -->
-      <div id="preview" class="preview-container"></div>
+      <div id="preview" class="preview-container">
+        <!-- Initial preview content loaded immediately -->
+        <div class="uq-alert uqbs-rounded-border--all uq-alert--info" role="note" data-aos="zoom-in" style="width: 80%; margin: 0 auto;">
+          <div class="uq-alert__message">
+            <span><b>This is an alert box</b>. <br> Fill your text in here, then click on the <b>copy</b> button below.</span>
+          </div>	
+        </div>
+      </div>
 
       <!-- Input Fields -->
       <label>Statement Text</label>
@@ -258,6 +265,8 @@
             if (data.bgClasses) {
               currentBgClasses = data.bgClasses;
             }
+            // Update preview with saved content immediately
+            updatePreview();
             updateAutoSaveIndicator('loaded');
           }
         }
@@ -333,13 +342,11 @@
     function updatePreview() {
       const content = tinyMCEEditor ? tinyMCEEditor.getContent() : document.getElementById('statementText').value;
       const previewHtml = `
-        <body>
-          <div class="uq-alert uqbs-rounded-border--all ${currentBgClasses}" role="note" data-aos="zoom-in" style="width: 80%; margin: 0 auto;">
-            <div class="uq-alert__message">
-              <span>${content}</span>
-            </div>	
+        <div class="uq-alert uqbs-rounded-border--all ${currentBgClasses}" role="note" data-aos="zoom-in" style="width: 80%; margin: 0 auto;">
+          <div class="uq-alert__message">
+            <span>${content}</span>
           </div>	
-        </body>
+        </div>	
       `;
       document.getElementById('preview').innerHTML = previewHtml;
       AOS.init({ duration: 1200, offset: 50 });
@@ -400,7 +407,7 @@ AOS.init({
 
     // Initialize TinyMCE
     async function initializeTinyMCE() {
-      // Load saved content first
+      // Load saved content first and update preview
       loadSavedContent();
       
       // Try to load the shared config
@@ -507,6 +514,8 @@ AOS.init({
 
     // Initialize when page loads
     document.addEventListener('DOMContentLoaded', function() {
+      // Show initial preview immediately on page load
+      updatePreview();
       initializeTinyMCE();
       AOS.init({ duration: 1200, offset: 50 });
     });
