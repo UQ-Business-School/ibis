@@ -124,10 +124,12 @@
       <!-- Input Fields -->
       <label>Statement Text</label>
       <p>Use the rich text editor below to format your text. The editor supports bold text, line breaks, and other formatting options.</p>
-      <p>For <strong class="uqbs-font-weight-heavy">bold text</strong>, use either <code>&lt;b&gt;bold&lt;/b&gt;</code> or <code>&lt;strong&gt;your text here&lt;/strong&gt;</code>. <br>You can insert a line-break by typing in <code>&lt;br&gt;</code>.</p>
       
       <div class="tinymce-container">
-        <textarea id="statementText" placeholder="Enter text here"><b>This is the Statement C (grey) text</b>. <br> Fill your text in here, then click on the <b>copy</b> button below.</textarea>
+        <textarea id="statementText" placeholder="Enter text here">
+          <h5>This is the Statement C text.</h5>
+          <p>Fill your text in here, then click on the&nbsp;<strong>copy</strong> button below.</p>
+        </textarea>
         <div id="autoSaveIndicator" class="auto-save-indicator">Auto-save: Ready</div>
       </div>
 		
@@ -186,23 +188,24 @@
   padding: 0;
   border-radius: 5px;
 }
-.uq-statementc{
+ .uq-statementc .uq-card__title{
   display: block;
-  /* background-color: var(--grey-100); */
   width: 100%!important;
   height: auto;
-  padding-top: 32px;
-  padding-bottom: 32px;
   font-weight: 400;
+  font-size: 1rem;
 }
+.uq-statementc .uq-card__title p{
+  margin-bottom: 0;
+}  
 .uqbs-font-weight-normal{
   font-weight: 400;
 }
 .uqbs-font-weight-normal b, .uqbs-font-weight-normal strong{
-  font-weight: bolder;
+  font-weight: 700;
 }
 .uqbs-font-weight-heavy{
-  font-weight: bolder;
+  font-weight: 700;
 }
 </style>	
   
@@ -307,9 +310,9 @@
       <body>
 <div class="uq-statementc uqbs-rounded-border--all ${currentBgClasses}" data-aos="fade" data-aos-delay="0">
   <div class="uq-container">
-  <h3 class="uq-card__title uqbs-font-weight-normal" data-aos="fade" data-aos-delay="0" style="font-size: 1.3rem;">
+  <span class="uq-card__title uqbs-font-weight-normal" data-aos="fade" data-aos-delay="0">
     ${content}
-    </h3>
+    </span>
 </div>	
 </div>	
     `;
