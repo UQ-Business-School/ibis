@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Statement C, V2</title>
+  <link rel="stylesheet" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+  <!-- TinyMCE -->
+  <script src="https://uq-business-school.github.io/ibis/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <style>
+    /* All your existing CSS remains unchanged */
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+    .uq-hero-basic__content, .uq-animated-gradient, .uq-card__title {
+      margin-left: 2rem;
+      margin-right: 2rem;
+    }
+    .uqgenerator-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      border: 1px solid #CDCDCD;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: #555;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .preview-container {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px dashed #CDCDCD;
+    }
+    button {
+      padding: 10px;
+      background-color: #51247a;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .icon-button {
+      vertical-align: middle;
+      background: none;
+      border: 1px solid #CDCDCD;
+      color: #555;
+      line-height: 1.6;
+      width: 100%;
+      cursor: pointer;
+    }
+    .icon-button svg {
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      fill: #51247a;
+      margin-right: 8px;
+      line-height: 1.6;
+    }
+    code{
+      background-color: #E8E8E8;
+      border-radius: 4px;
+    }
+    .preview-color-button{
+      display: block;
+      height: 16px;
+      width: 16px;
+      border-radius: 4px;
+    }
+    .color-row{
+		  display: block;
+		  width: 100%;
+		  margin: 10px 0;
+	  }
+    
+    /* Additional styles for TinyMCE integration */
+    .tinymce-container {
+      margin-bottom: 20px;
+    }
+    
+    /* Auto-save indicator */
+    .auto-save-indicator {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    
+    .auto-save-indicator.saving {
+      color: #f39c12;
+    }
+    
+    .auto-save-indicator.saved {
+      color: #27ae60;
+    }
+    
+    .auto-save-indicator.loading {
+      color: #3498db;
+    }
+  </style>
+</head>
+<body>
+  <div class="uq-container"> 
+    <div class="uqgenerator-container">
+      <!-- Live Preview Section -->
+      <div id="preview" class="preview-container"></div>
+
+      <!-- Input Fields -->
+      <label>Statement Text</label>
+      <p>Use the rich text editor below to format your text. The editor supports bold text, line breaks, and other formatting options.</p>
+      <p>For <strong class="uqbs-font-weight-heavy">bold text</strong>, use either <code>&lt;b&gt;bold&lt;/b&gt;</code> or <code>&lt;strong&gt;your text here&lt;/strong&gt;</code>. <br>You can insert a line-break by typing in <code>&lt;br&gt;</code>.</p>
+      
+      <div class="tinymce-container">
+        <textarea id="statementText" placeholder="Enter text here"><b>This is the Statement C (grey) text</b>. <br> Fill your text in here, then click on the <b>copy</b> button below.</textarea>
+        <div id="autoSaveIndicator" class="auto-save-indicator">Auto-save: Ready</div>
+      </div>
+		
+      <label>Change color</label>
+      <p>Click on the colors below to change the colors:</p>
+      <!-- Row 1 -->
+		<div class="color-row">
+      <button id="bg-black" class="bg-black">Black</button>
+      <button id="bg-white" class="bg-white">White</button>
+      <button id="bg-purple" class="bg-purple">Purple</button>
+		</div>
+      <!-- Row 2 --> 
+		<div class="color-row">
+      <button id="bg-light-purple" class="bg-light-purple">Light Purple</button> 
+      <button id="bg-red" class="bg-red">Red</button>
+      <button id="bg-orange" class="bg-orange">Orange</button>
+      <button id="bg-yellow" class="bg-yellow">Yellow</button>
+      <button id="bg-gold" class="bg-gold">Gold</button>
+      <button id="bg-green" class="bg-green">Green</button> 
+      <button id="bg-blue" class="bg-blue">Blue</button>
+      <button id="bg-aqua" class="bg-aqua">Aqua</button>
+		</div>
+      <!-- Row 3 --> 
+		<div class="color-row">
+      <button id="bg-neutral" class="bg-neutral">Neutral</button>  
+      <button id="bg-neutral20" class="bg-neutral20">Neutral20</button>   
+      <button id="bg-neutral40" class="bg-neutral40">Neutral40</button>  
+      <button id="bg-neutral60" class="bg-neutral60">Neutral60</button>  
+      <button id="bg-neutral80" class="bg-neutral80">Neutral80</button>
+		</div>	
+      <!-- Row 4 --> 
+		<div class="color-row">
+      <button id="bg-dark-grey" class="bg-dark-grey">Dark Grey</button>
+      <button id="bg-dark-grey20" class="bg-dark-grey20 text-black">Dark Grey20</button>
+      <button id="bg-dark-grey40" class="bg-dark-grey40 text-black">Dark Grey40</button>
+      <button id="bg-dark-grey60" class="bg-dark-grey60 text-black">Dark Grey60</button>
+      <button id="bg-dark-grey80" class="bg-dark-grey80 text-black">Dark Grey80</button>
+		</div>
+      <br>
+      <button class="uq-button uq-button--large uq-button--expand" onclick="copyToClipboard()">
+        <span class="uq-icon uq-icon--standard--common-file-double"></span>
+        Copy to Clipboard
+      </button>
+    </div>
+  </div>
+
+<!-- Style sheet - to be applied to master version: uqbs-bsan.css -->
+<style>
+.uq-animated-gradient-b{
+  display: block;
+  margin: 0 auto 16px;
+  margin-bottom: 16px;
+  background: var(--uq-purple);
+  height: 8px;
+  width: 100px;
+  padding: 0;
+  border-radius: 5px;
+}
+.uq-statementc{
+  display: block;
+  /* background-color: var(--grey-100); */
+  width: 100%!important;
+  height: auto;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  font-weight: 400;
+}
+.uqbs-font-weight-normal{
+  font-weight: 400;
+}
+.uqbs-font-weight-normal b, .uqbs-font-weight-normal strong{
+  font-weight: bolder;
+}
+.uqbs-font-weight-heavy{
+  font-weight: bolder;
+}
+</style>	
+  
+  <!-- Inline Preview & Clipboard Script (custom per generator) -->
+ <script>
+  // Global variables
+  let currentBgClasses = "bg-neutral";
+  let autoSaveTimer = null;
+  let tinyMCEEditor = null;
+  const AUTO_SAVE_DELAY = 5000; // 5 seconds
+  const LOCAL_STORAGE_KEY = "IBISStatementCGenerator";
+  const CONFIG_URL = "https://uq-business-school.github.io/ibis/templates/interactive/tabs/tinymce.config.js";
+
+  // Load saved content from localStorage
+  function loadSavedContent() {
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (data.content) {
+          document.getElementById('statementText').value = data.content;
+          if (data.bgClasses) {
+            currentBgClasses = data.bgClasses;
+          }
+          // Update preview with saved content immediately
+          updatePreview();
+          updateAutoSaveIndicator('loaded');
+        }
+      }
+    } catch (e) {
+      console.error('Error loading saved content:', e);
+    }
+  }
+
+  // Save content to localStorage
+  function saveToLocalStorage() {
+    try {
+      const content = tinyMCEEditor ? tinyMCEEditor.getContent() : document.getElementById('statementText').value;
+      const data = {
+        content: content,
+        bgClasses: currentBgClasses,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+      updateAutoSaveIndicator('saved');
+    } catch (e) {
+      console.error('Error saving content:', e);
+      updateAutoSaveIndicator('error');
+    }
+  }
+
+  // Update auto-save indicator
+  function updateAutoSaveIndicator(status) {
+    const indicator = document.getElementById('autoSaveIndicator');
+    const now = new Date().toLocaleTimeString();
+    
+    switch(status) {
+      case 'saving':
+        indicator.textContent = 'Auto-save: Saving...';
+        indicator.className = 'auto-save-indicator saving';
+        break;
+      case 'saved':
+        indicator.textContent = `Auto-save: Saved at ${now}`;
+        indicator.className = 'auto-save-indicator saved';
+        break;
+      case 'loaded':
+        indicator.textContent = 'Auto-save: Previous content loaded';
+        indicator.className = 'auto-save-indicator saved';
+        break;
+      case 'loading':
+        indicator.textContent = 'Auto-save: Loading editor...';
+        indicator.className = 'auto-save-indicator loading';
+        break;
+      case 'error':
+        indicator.textContent = 'Auto-save: Error saving';
+        indicator.className = 'auto-save-indicator';
+        break;
+      default:
+        indicator.textContent = 'Auto-save: Ready';
+        indicator.className = 'auto-save-indicator';
+    }
+  }
+
+  // Trigger auto-save with delay
+  function triggerAutoSave() {
+    updateAutoSaveIndicator('saving');
+    
+    // Clear existing timer
+    if (autoSaveTimer) {
+      clearTimeout(autoSaveTimer);
+    }
+    
+    // Set new timer
+    autoSaveTimer = setTimeout(() => {
+      saveToLocalStorage();
+    }, AUTO_SAVE_DELAY);
+  }
+
+  function updatePreview() {
+    const content = tinyMCEEditor ? tinyMCEEditor.getContent() : document.getElementById('statementText').value;
+    const previewHtml = `
+      <body>
+<div class="uq-statementc uqbs-rounded-border--all ${currentBgClasses}" data-aos="fade" data-aos-delay="0">
+  <div class="uq-container">
+  <h3 class="uq-card__title uqbs-font-weight-normal" data-aos="fade" data-aos-delay="0" style="font-size: 1.3rem;">
+    ${content}
+    </h3>
+</div>	
+</div>	
+    `;
+    document.getElementById('preview').innerHTML = previewHtml;
+    AOS.init({ duration: 1200, offset: 50 });
+  }
+  // Expose updatePreview globally so imagePicker.js can call it.
+  window.updatePreview = updatePreview;
+
+  function copyToClipboard() {
+    const previewClone = document.getElementById('preview').cloneNode(true);
+    previewClone.querySelectorAll('.aos-init, .aos-animate').forEach(el => {
+      el.classList.remove('aos-init');
+      el.classList.remove('aos-animate');
+    });
+    const htmlToCopy = `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Statement C</title>
+  <link rel="stylesheet" media="all" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"><\/script>
+</head>  
+<body>  
+${previewClone.innerHTML}
+<script>
+AOS.init({
+  duration: 1200,
+  offset: 50
+})
+<\/script>  
+</body>
+</html>`;
+    navigator.clipboard.writeText(htmlToCopy).then(() => {
+      alert('Copied to clipboard!');
+    }).catch(err => {
+      alert('Error copying: ' + err);
+    });
+  }
+
+  // Load and execute the shared config
+  function loadSharedConfig() {
+    return new Promise((resolve, reject) => {
+      updateAutoSaveIndicator('loading');
+      
+      const script = document.createElement('script');
+      script.src = CONFIG_URL;
+      script.onload = () => {
+        console.log('Shared config loaded successfully');
+        resolve();
+      };
+      script.onerror = () => {
+        console.warn('Failed to load shared config, will use fallback');
+        resolve(); // Don't reject, just continue with fallback
+      };
+      document.head.appendChild(script);
+    });
+  }
+
+  // Initialize TinyMCE
+  async function initializeTinyMCE() {
+    // Load saved content first and update preview
+    loadSavedContent();
+    
+    // Try to load the shared config
+    await loadSharedConfig();
+    
+    // Wait a bit for the config to be processed
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Check if shared config is available (looking for setupTinyMCE function)
+    if (typeof setupTinyMCE === 'function') {
+      console.log('Using shared config');
+      try {
+        // Get initial content
+        const initialContent = document.getElementById('statementText').value;
+        
+        // Use the shared config function
+        setupTinyMCE('#statementText', initialContent, function(content) {
+          // This is the onChange callback
+          updatePreview();
+          triggerAutoSave();
+        });
+        
+        // Wait for TinyMCE to be ready and get the editor instance
+        setTimeout(() => {
+          tinyMCEEditor = tinymce.get('statementText');
+          if (tinyMCEEditor) {
+            updatePreview();
+            
+            // Set saved content if available
+            try {
+              const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+              if (saved) {
+                const data = JSON.parse(saved);
+                if (data.content) {
+                  tinyMCEEditor.setContent(data.content);
+                  updatePreview();
+                }
+              }
+            } catch (e) {
+              console.error('Error setting saved content:', e);
+            }
+          }
+        }, 500);
+        
+      } catch (e) {
+        console.error('Error with shared config, falling back:', e);
+        initializeFallbackTinyMCE();
+      }
+    } else {
+      console.log('Shared config not available, using fallback');
+      initializeFallbackTinyMCE();
+    }
+  }
+
+  // Fallback TinyMCE initialization
+  function initializeFallbackTinyMCE() {
+    if (typeof tinymce !== 'undefined') {
+      tinymce.init({
+        selector: '#statementText',
+        height: 300,
+        menubar: false,
+        plugins: 'lists link code table',
+        toolbar: 'undo redo | bold italic | bullist numlist | link | table | code',
+        content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; }',
+        setup: function(editor) {
+          editor.on('input change', function() {
+            updatePreview();
+            triggerAutoSave();
+          });
+        },
+        init_instance_callback: function(editor) {
+          tinyMCEEditor = editor;
+          updatePreview();
+          
+          // Set saved content if available
+          try {
+            const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (saved) {
+              const data = JSON.parse(saved);
+              if (data.content) {
+                editor.setContent(data.content);
+                updatePreview();
+              }
+            }
+          } catch (e) {
+            console.error('Error setting saved content:', e);
+          }
+        }
+      });
+    } else {
+      console.error('TinyMCE not available at all');
+      updateAutoSaveIndicator('error');
+    }
+  }
+  
+  // Attach event listeners to color buttons
+  document.querySelectorAll("button[id^='bg-']").forEach(button => {
+    button.addEventListener("click", function() {
+      currentBgClasses = button.className;
+      updatePreview();
+      triggerAutoSave();
+    });
+  });
+
+  // Initialize when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    // Show initial preview immediately on page load
+    updatePreview();
+    initializeTinyMCE();
+    AOS.init({ duration: 1200, offset: 50 });
+  });
+
+  // Save before page unload
+  window.addEventListener('beforeunload', function() {
+    if (autoSaveTimer) {
+      clearTimeout(autoSaveTimer);
+      saveToLocalStorage();
+    }
+  });
+
+</script>
+
+</body>
+</html>
