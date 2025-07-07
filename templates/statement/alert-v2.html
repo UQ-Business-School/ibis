@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Alerts, V9</title>
+  <title>Alerts, V12</title>
   <!-- Existing stylesheet -->
   <link rel="stylesheet" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
   <!-- Generator UI styles -->
@@ -13,8 +13,6 @@
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
   <!-- TinyMCE -->
   <script src="https://uq-business-school.github.io/ibis/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
-  <!-- TinyMCE config -->
-  <script src="https://uq-business-school.github.io/ibis/templates/interactive/tabs/tinymce.config.js"></script>
   
   <style>
     /* All your existing CSS remains unchanged */
@@ -186,6 +184,10 @@
     .auto-save-indicator.saved {
       color: #27ae60;
     }
+    
+    .auto-save-indicator.loading {
+      color: #3498db;
+    }
   </style>
 </head>
 <body>
@@ -243,6 +245,7 @@
     let tinyMCEEditor = null;
     const AUTO_SAVE_DELAY = 5000; // 5 seconds
     const LOCAL_STORAGE_KEY = "IBISAlertsGenerator";
+    const CONFIG_URL = "https://uq-business-school.github.io/ibis/templates/interactive/tabs/tinymce.config.js";
 
     // Load saved content from localStorage
     function loadSavedContent() {
@@ -297,6 +300,10 @@
         case 'loaded':
           indicator.textContent = 'Auto-save: Previous content loaded';
           indicator.className = 'auto-save-indicator saved';
+          break;
+        case 'loading':
+          indicator.textContent = 'Auto-save: Loading editor...';
+          indicator.className = 'auto-save-indicator loading';
           break;
         case 'error':
           indicator.textContent = 'Auto-save: Error saving';
@@ -372,35 +379,54 @@ AOS.init({
       });
     }
 
+    // Load and execute the shared config
+    function loadSharedConfig() {
+      return new Promise((resolve, reject) => {
+        updateAutoSaveIndicator('loading');
+        
+        const script = document.createElement('script');
+        script.src = CONFIG_URL;
+        script.onload = () => {
+          console.log('Shared config loaded successfully');
+          resolve();
+        };
+        script.onerror = () => {
+          console.warn('Failed to load shared config, will use fallback');
+          resolve(); // Don't reject, just continue with fallback
+        };
+        document.head.appendChild(script);
+      });
+    }
+
     // Initialize TinyMCE
-    function initializeTinyMCE() {
+    async function initializeTinyMCE() {
       // Load saved content first
       loadSavedContent();
       
-      // Add some debugging
-      console.log('TinyMCE available:', typeof tinymce !== 'undefined');
-      console.log('initTinyMCE function available:', typeof initTinyMCE === 'function');
+      // Try to load the shared config
+      await loadSharedConfig();
       
-      // Wait for the shared config to be available, with timeout
-      let attempts = 0;
-      const maxAttempts = 50; // 5 seconds max wait
+      // Wait a bit for the config to be processed
+      await new Promise(resolve => setTimeout(resolve, 100));
       
-      function waitForSharedConfig() {
-        attempts++;
-        console.log(`Attempt ${attempts}: Checking for shared config...`);
-        
-        if (typeof initTinyMCE === 'function') {
-          console.log('Found shared config, initializing...');
-          // Initialize TinyMCE with the shared configuration
-          tinyMCEEditor = initTinyMCE('statementText', {
-            setup: function(editor) {
-              editor.on('input change', function() {
-                updatePreview();
-                triggerAutoSave();
-              });
-            },
-            init_instance_callback: function(editor) {
-              tinyMCEEditor = editor;
+      // Check if shared config is available (looking for setupTinyMCE function)
+      if (typeof setupTinyMCE === 'function') {
+        console.log('Using shared config');
+        try {
+          // Get initial content
+          const initialContent = document.getElementById('statementText').value;
+          
+          // Use the shared config function
+          setupTinyMCE('#statementText', initialContent, function(content) {
+            // This is the onChange callback
+            updatePreview();
+            triggerAutoSave();
+          });
+          
+          // Wait for TinyMCE to be ready and get the editor instance
+          setTimeout(() => {
+            tinyMCEEditor = tinymce.get('statementText');
+            if (tinyMCEEditor) {
               updatePreview();
               
               // Set saved content if available
@@ -409,7 +435,7 @@ AOS.init({
                 if (saved) {
                   const data = JSON.parse(saved);
                   if (data.content) {
-                    editor.setContent(data.content);
+                    tinyMCEEditor.setContent(data.content);
                     updatePreview();
                   }
                 }
@@ -417,17 +443,57 @@ AOS.init({
                 console.error('Error setting saved content:', e);
               }
             }
-          });
-        } else if (attempts < maxAttempts) {
-          // Wait and try again
-          setTimeout(waitForSharedConfig, 100);
-        } else {
-          console.error('Shared config not found after 5 seconds, may be a cross-origin issue');
-          updateAutoSaveIndicator('error');
+          }, 500);
+          
+        } catch (e) {
+          console.error('Error with shared config, falling back:', e);
+          initializeFallbackTinyMCE();
         }
+      } else {
+        console.log('Shared config not available, using fallback');
+        initializeFallbackTinyMCE();
       }
-      
-      waitForSharedConfig();
+    }
+
+    // Fallback TinyMCE initialization
+    function initializeFallbackTinyMCE() {
+      if (typeof tinymce !== 'undefined') {
+        tinymce.init({
+          selector: '#statementText',
+          height: 300,
+          menubar: false,
+          plugins: 'lists link code table',
+          toolbar: 'undo redo | bold italic | bullist numlist | link | table | code',
+          content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; }',
+          setup: function(editor) {
+            editor.on('input change', function() {
+              updatePreview();
+              triggerAutoSave();
+            });
+          },
+          init_instance_callback: function(editor) {
+            tinyMCEEditor = editor;
+            updatePreview();
+            
+            // Set saved content if available
+            try {
+              const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+              if (saved) {
+                const data = JSON.parse(saved);
+                if (data.content) {
+                  editor.setContent(data.content);
+                  updatePreview();
+                }
+              }
+            } catch (e) {
+              console.error('Error setting saved content:', e);
+            }
+          }
+        });
+      } else {
+        console.error('TinyMCE not available at all');
+        updateAutoSaveIndicator('error');
+      }
     }
 
     // Attach event listeners to color buttons
