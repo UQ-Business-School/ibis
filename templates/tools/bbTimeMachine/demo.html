@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>JacSON Assessment Embed Demo</title>
+  <title>BB Time Machine</title>
   <link rel="stylesheet" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
   <style>
     body {
@@ -130,6 +130,9 @@
       background-color: #f9f9f9;
       color: #666;
     }
+    strong{
+      font-weight: bolder;
+    }
   </style>
 </head>
 <body>
@@ -139,23 +142,36 @@
 
       <div class="demo-info">
         <h4>Restricted Access</h4>
-        <p>This page will allow you to view any Blackboard Ultra course in Original mode. This can be used for debugging issues in Ultra, e.g. a Content Market extension is unavailable for some reason. Using this tool allows you to go "under the hood" of Ultra and modify certain aspects under the ROOT portion of the course.</p>
-        <p>You will need to be added to the UQ Business School ORCA site in order to be able to access this tool. This tool can be <strong>destructive</strong> and can <em>absolutely brick a course if you don't know what you are doing</em>. Tread carefully.</p>
-        <p>Do not attempt to build courses or pages while in original mode - you will brick the entire page. Only use this for special tools or for debugging purposes.</p>
-          <p><strong>This tool can only be used by Learning Designers and Learning Officers within the UQ Business School.</strong> This tool is not supported by anyone.</p>
-          <p><strong>You will need to sign in to <a href="https://learn.uq.edu.au" target=""_blank>https://learn.uq.edu.au</a> first, and then access this page in order for the tool to render.</strong></p>
+        <p>This tool will allow you to view any Blackboard Ultra course in Original mode. This can be used for debugging issues in Ultra, e.g. a Content Market extension is unavailable for some reason. Using this tool allows you to go "under the hood" of Ultra and modify certain aspects under the ROOT portion of the course.</p>
+        <ol>
+          <li>You will need to be added to the UQ Business School ORCA site in order to be able to access this tool. This tool can be <strong>destructive</strong> and can <em>absolutely brick a course if you don't know what you are doing</em>. <u>Tread carefully.</u></li>
+          <li>Do not attempt to build courses or pages while in Original mode - you will brick the entire page. Only use this for special tools or for debugging purposes.</li>
+          <li><strong>This tool can only be used by Learning Designers and Learning Officers within the UQ Business School.</strong> This tool is not supported by anyone.</li>
+          <li><strong>You will need to sign in to <a href="https://learn.uq.edu.au" target=""_blank>https://learn.uq.edu.au</a> first, and then access this page in order for the tool to render.</strong></li>
+        </ol>
       </div>
 
-      <div class="preview-container">
+      <!-- <div class="preview-container">
         <div class="iframe-container">
           <iframe id="previewFrame" src="https://learn.uq.edu.au/bbcswebdav/xid-76577465_1" width="100%" height="1200" frameborder="0" allowfullscreen></iframe>
         </div>
-      </div>
+      </div> -->
+        <div id="preview" class="preview-container">
+        <a href="https://learn.uq.edu.au/bbcswebdav/xid-76577465_1" class="uq-button uq-button--large  uq-button--expand" target="_self">
+          <span class="uq-icon uq-icon uq-icon--standard--exclamation-triangle"></span> I understand the destructive powers of this tool and wish to proceed. Let's go back in time!
+        </a>
+        </div>
+ 
 
     </div>
   </div>
 </div>
-
+<script>
+  AOS.init({
+    duration: 1200,
+    offset: 50
+  })
+  </script> 
 
 
 </body>
