@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BB Time Machine</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      background-color: #262626;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid #262626;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-left: 2.5rem;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .toolbar button {
+      background-color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      font-weight: bold;
+    }
+
+    .toolbar button:hover {
+      background-color: #e0e0e0;
+    }
+
+    .toolbar button.active {
+      background-color: #444;
+      color: #fff;
+    }
+
+    .toolbar button[data-tab="external"]::after {
+      content: " \2197";
+      font-size: 0.8em;
+    }
+
+    iframe {
+      width: 100%;
+      height: calc(100vh - 60px);
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Blackboard Time Machine</div>
+    <div class="toolbar">
+
+      <button id="createBtn" data-tab="external">+ Open in New Tab</button>
+      <button id="dashboardBtn" data-tab="external">Access ORCA</button>
+      <button id="landingBtn" class="active">View</button>
+      <button id="h5pDocsBtn">learn.uq.edu.au</button>
+    </div>
+  </header>
+
+  <iframe id="contentFrame" src="demo.html"></iframe>
+
+  <script>
+    const buttons = document.querySelectorAll(".toolbar button");
+    const frame = document.getElementById("contentFrame");
+
+    const routes = {
+      createBtn: "https://learn.uq.edu.au/bbcswebdav/xid-76577465_1",
+      dashboardBtn: "https://learn.uq.edu.au/ultra/organizations/_191729_1/outline",
+      landingBtn: "demo.html",
+      h5pDocsBtn: "https://learn.uq.edu.au/ultra/"
+    };
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        // Remove active only from iframe targets
+        ["landingBtn", "h5pDocsBtn"].forEach(id => document.getElementById(id).classList.remove("active"));
+
+        const id = btn.id;
+        if (btn.dataset.tab === "external") {
+          window.open(routes[id], "_blank");
+        } else {
+          btn.classList.add("active");
+          frame.src = routes[id];
+        }
+      });
+    });
+  </script>
+</body>
+</html>
