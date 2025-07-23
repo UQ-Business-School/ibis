@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UQ Colour Palette – WCAG 2.2 AA/AAA Checker</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    :root {
+      --uq-red-50: #fbdbe0; --uq-red-100: #f7b7c1; --uq-red-200: #f393a2; --uq-red-300: #ee6e83; --uq-red-400: #ea4a64; --uq-red-500: #e62645;
+      --uq-red-600: #c0203a; --uq-red-700: #99192e; --uq-red-800: #731323; --uq-red-900: #4d0d17; --uq-red-950: #26060c; --uq-red: var(--uq-red-500);
+      --uq-orange-50: #fce5dc; --uq-orange-100: #f8cab8; --uq-orange-200: #f5b095; --uq-orange-300: #f29572; --uq-orange-400: #ee7b4e; --uq-orange-500: #eb602b;
+      --uq-orange-600: #c45024; --uq-orange-700: #9d401d; --uq-orange-800: #763016; --uq-orange-900: #4e200e; --uq-orange-950: #271007; --uq-orange: var(--uq-orange-500);
+      --uq-yellow-50: #fef3d5; --uq-yellow-100: #fee7aa; --uq-yellow-200: #fddc80; --uq-yellow-300: #fcd055; --uq-yellow-400: #fcc42a; --uq-yellow-500: #fbb800;
+      --uq-yellow-600: #d19900; --uq-yellow-700: #a77b00; --uq-yellow-800: #7e5c00; --uq-yellow-900: #543d00; --uq-yellow-950: #2a1f00; --uq-yellow: var(--uq-yellow-500);
+      --uq-gold-50: #f4efe5; --uq-gold-100: #e8decc; --uq-gold-200: #ddceb2; --uq-gold-300: #d2be98; --uq-gold-400: #c6ad7f; --uq-gold-500: #bb9d65;
+      --uq-gold-600: #9c8354; --uq-gold-700: #7d6943; --uq-gold-800: #5e4f33; --uq-gold-900: #3e3422; --uq-gold-950: #1f1a11; --uq-gold: var(--uq-gold-500);
+      --uq-green-50: #dcf1de; --uq-green-100: #b9e2bc; --uq-green-200: #97d49b; --uq-green-300: #74c579; --uq-green-400: #51b758; --uq-green-500: #2ea836;
+      --uq-green-600: #268c2d; --uq-green-700: #1f7024; --uq-green-800: #17541b; --uq-green-900: #0f3812; --uq-green-950: #081c09; --uq-green: var(--uq-green-500);
+      --uq-aqua-50: #d5f0f6; --uq-aqua-100: #aae0ec; --uq-aqua-200: #80d1e3; --uq-aqua-300: #55c1da; --uq-aqua-400: #2ab2d0; --uq-aqua-500: #00a2c7;
+      --uq-aqua-600: #0087a6; --uq-aqua-700: #006c85; --uq-aqua-800: #005164; --uq-aqua-900: #003642; --uq-aqua-950: #001b21; --uq-aqua: var(--uq-aqua-500);
+      --uq-blue-50: #dfebf6; --uq-blue-100: #bfd6ec; --uq-blue-200: #a0c2e3; --uq-blue-300: #80aed9; --uq-blue-400: #6099d0; --uq-blue-500: #4085c6;
+      --uq-blue-600: #356fa5; --uq-blue-700: #2b5984; --uq-blue-800: #204363; --uq-blue-900: #152c42; --uq-blue-950: #0b1621; --uq-blue: var(--uq-blue-500);
+      --uq-light-purple-50: #eedcec; --uq-light-purple-100: #dcb8d8; --uq-light-purple-200: #cb95c5; --uq-light-purple-300: #b971b2; --uq-light-purple-400: #a84e9e; --uq-light-purple-500: #962a8b;
+      --uq-light-purple-600: #7d2374; --uq-light-purple-700: #641c5d; --uq-light-purple-800: #4b1546; --uq-light-purple-900: #320e2e; --uq-light-purple-950: #190717; --uq-light-purple: var(--uq-light-purple-500);
+      --uq-purple-50: #e2dbe9; --uq-purple-100: #c5b6d3; --uq-purple-200: #a892bd; --uq-purple-300: #8b6da6; --uq-purple-400: #6e4990; --uq-purple-500: #51247a;
+      --uq-purple-600: #441e66; --uq-purple-700: #361851; --uq-purple-800: #29123d; --uq-purple-900: #1b0c29; --uq-purple-950: #0e0614; --uq-purple: var(--uq-purple-500);
+      --uq-dark-purple-50: #e9e6ea; --uq-dark-purple-100: #d2ccd4; --uq-dark-purple-200: #bcb3bf; --uq-dark-purple-300: #a599a9; --uq-dark-purple-400: #8f8094; --uq-dark-purple-500: #79667f;
+      --uq-dark-purple-600: #624d69; --uq-dark-purple-700: #4c3354; --uq-dark-purple-800: #35193e; --uq-dark-purple-900: #1f0029; --uq-dark-purple-950: #100015; --uq-dark-purple: var(--uq-dark-purple-900);
+      --uq-neutral-50: #f8f7f7; --uq-neutral-100: #f2f0ee; --uq-neutral-200: #ebe8e6; --uq-neutral-300: #e4e0dd; --uq-neutral-400: #ded9d5; --uq-neutral-500: #d7d1cc;
+      --uq-neutral-600: #b3aeaa; --uq-neutral-700: #8f8b88; --uq-neutral-800: #6c6966; --uq-neutral-900: #484644; --uq-neutral-950: #242322; --uq-neutral: var(--uq-neutral-500);
+      --uq-dark-grey-50: #eeeded; --uq-dark-grey-100: #dddbda; --uq-dark-grey-200: #cccac8; --uq-dark-grey-300: #bbb8b5; --uq-dark-grey-400: #aaa6a3; --uq-dark-grey-500: #999490;
+      --uq-dark-grey-600: #807b78; --uq-dark-grey-700: #666360; --uq-dark-grey-800: #4d4a48; --uq-dark-grey-900: #333130; --uq-dark-grey-950: #1a1918; --uq-dark-grey: var(--uq-dark-grey-500);
+    }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f7; margin: 0; }
+    h1 { text-align: center; margin: 2rem 0 0.5rem; }
+    .palette-group { margin-bottom: 2.2rem; page-break-inside: avoid; }
+    .palette-title { font-weight: bold; font-size: 1.2rem; margin: 1.3rem 0 0.3rem 0.7rem; letter-spacing: .1em; }
+    .swatch-row { display: flex; gap: 1.2rem; padding: 0 1rem; overflow-x: auto; page-break-inside: avoid; }
+    .swatch-block {
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #0001;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.8rem 0.6rem;
+      min-width: 150px;
+      min-height: 130px;
+      margin-bottom: 0.7rem;
+      margin-top: 0.2rem;
+      cursor: pointer;
+      transition: transform 0.07s;
+      position: relative;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .swatch-block:hover { transform: scale(1.04); z-index: 1; }
+    .swatch-block .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      background: #222d;
+      color: #fff;
+      border-radius: 4px;
+      padding: 3px 10px;
+      position: absolute;
+      left: 50%;
+      top: 5px;
+      transform: translateX(-50%);
+      font-size: 0.98em;
+      z-index: 2;
+      transition: all 0.16s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .swatch-block.show-tooltip .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+    .swatch-code { font-family: 'Consolas', monospace; font-size: 1rem; margin-top: 0.4rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.22em;}
+    .swatch-code .padlock { margin-left: 3px; }
+    .alias-label {
+      display: block;
+      font-size: 0.90em;
+      background: #fff3;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      padding: 1px 7px 1px 7px;
+      font-weight: 500;
+      opacity: 0.75;
+      letter-spacing: .02em;
+    }
+    .results-table { width: 95%; margin: 0.4rem 0 0 0; border-collapse: collapse; font-size: 0.98rem;}
+    .results-table th, .results-table td { padding: 0.17rem 0.4rem; }
+    .results-table th { font-weight: 600; }
+    .tick { font-size: 1.1rem; color: #229a00; }
+    .cross { font-size: 1.1rem; color: #d12c2c; }
+    @media (max-width: 700px) {
+      .swatch-row { flex-direction: column; gap: 0.6rem;}
+      .swatch-block { min-width: unset; width: 100%; }
+    }
+
+    /* Printer friendly */
+    @media print {
+      body { background: #fff; }
+      h1 { margin: 0.3em 0 0.6em; }
+      .palette-title { margin: 0.8em 0 0.15em 0.2em; }
+      .palette-group, .swatch-row, .swatch-block { page-break-inside: avoid !important; break-inside: avoid !important; }
+      .swatch-row { flex-wrap: nowrap !important; }
+      .swatch-block {
+        box-shadow: none;
+        border: 1px solid #bbb;
+        margin: 0 0.1em 0 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>UQ Colour Palette & WCAG 2.2 Compliance</h1>
+  <div id="palette"></div>
+  <script>
+    // Mapping: main var, locked weights, shades
+    const palette = [
+      { name: 'Red', prefix: 'uq-red', locked: 500, alias: true, shades: [50,100,200,300,400,500,600,700,800,900,950] },
+      { name: 'Orange', prefix: 'uq-orange', locked: 500, alias: true, shades: [50,100,200,300,400,500,600,700,800,900,950] },
+      { name: 'Yellow', prefix: 'uq-yellow', locked: 500, alias: true, shades: [50,100,200,300,400,500,600,700,800,900,950] },
+      { name: 'Gold', prefix: 'uq-gold', locked: 500, alias: true, shades: [50,100,200,300,400,500,600,700,800,900,950] },
+      { name: 'Green', prefix: 'uq-green', locked: 500, alias: true, shades: [50,100,200,300,400,500,600,700,800,900,950] },
+      { name: 'Aqua', prefix: 'uq-aqua', locked: 500, alias: true, shades: [50,100,200,300,400,500,600,700,800,900,950] },
+      { name: 'Blue', prefix: 'uq-blue', locked: 500, alias: true, shades: [50,100,200,300,400,500,600,700,800,900,950] },
+      { name: 'Light Purple', prefix: 'uq-light-purple', locked: 500, alias: true, shades: [50,100,200,300,400,500,600,700,800,900,950] },
+      { name: 'Purple', prefix: 'uq-purple', locked: 500, alias: true, shades: [50,100,200,300,400,500,600,700,800,900,950] },
+      { name: 'Dark Purple', prefix: 'uq-dark-purple', locked: 900, alias: true, shades: [50,100,200,300,400,500,600,700,800,900,950] },
+      { name: 'Neutral', prefix: 'uq-neutral', locked: 500, alias: true, shades: [50,100,200,300,400,500,600,700,800,900,950] },
+      { name: 'Dark Grey', prefix: 'uq-dark-grey', locked: 500, alias: true, shades: [50,100,200,300,400,500,600,700,800,900,950] }
+    ];
+
+    // Util: Luminance, contrast ratio
+    function luminance(hex) {
+      hex = hex.replace('#','');
+      if (hex.length === 3) hex = hex.split('').map(x=>x+x).join('');
+      let rgb = [0,1,2].map(i=>parseInt(hex.slice(i*2,i*2+2),16)/255);
+      rgb = rgb.map(v=>v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4));
+      return 0.2126*rgb[0] + 0.7152*rgb[1] + 0.0722*rgb[2];
+    }
+    function contrast(hexA, hexB) {
+      let L1 = luminance(hexA);
+      let L2 = luminance(hexB);
+      return ((Math.max(L1,L2)+0.05)/(Math.min(L1,L2)+0.05)).toFixed(2);
+    }
+    function wcagResult(ratio, level) {
+      if (level==='AA') return ratio >= 4.5;
+      if (level==='AAA') return ratio >= 7.0;
+      return false;
+    }
+    function emoji(ok) { return ok ? '<span class="tick">✅</span>' : '<span class="cross">❌</span>'; }
+
+    // Build one swatch
+    function makeSwatch({hex, label, locked, alias}) {
+      let ratioWhite = contrast(hex, '#ffffff');
+      let ratioBlack = contrast(hex, '#000000');
+      // Padlock only for locked, label alias if provided
+      return `
+      <div class="swatch-block" style="background:${hex}; color:${ratioWhite>=ratioBlack ? '#fff':'#222'};"
+           data-hex="${hex}" tabindex="0">
+        <span class="tooltip">Copied!</span>
+        ${alias ? `<span class="alias-label">Alias: <b>${label}</b></span>` : ''}
+        <span class="swatch-code">
+          ${hex.toUpperCase()}
+          ${locked ? `<span class="padlock" title="Locked weight">🔒</span>` : ''}
+        </span>
+        <table class="results-table">
+          <thead>
+            <tr><th></th><th>AA</th><th>AAA</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>White</td>
+              <td>${emoji(wcagResult(ratioWhite, 'AA'))}</td>
+              <td>${emoji(wcagResult(ratioWhite, 'AAA'))}</td>
+            </tr>
+            <tr>
+              <td>Black</td>
+              <td>${emoji(wcagResult(ratioBlack, 'AA'))}</td>
+              <td>${emoji(wcagResult(ratioBlack, 'AAA'))}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top:3px;font-size:0.88em;opacity:0.75;">Contrast<br>White: ${ratioWhite}<br>Black: ${ratioBlack}</div>
+      </div>
+      `;
+    }
+
+    function renderPalette() {
+      const container = document.getElementById('palette');
+      palette.forEach(group=>{
+        let row = `<div class="palette-group">
+            <div class="palette-title">${group.name}</div>
+            <div class="swatch-row">`;
+
+        // First card: alias (e.g. --uq-red), show as "Alias: --uq-red"
+        let aliasVar = `--${group.prefix}`;
+        let aliasHex = getComputedStyle(document.documentElement).getPropertyValue(aliasVar).trim();
+        // Get what weight this is (resolve var)
+        let lockedHex = getComputedStyle(document.documentElement).getPropertyValue(`--${group.prefix}-${group.locked}`).trim();
+        let aliasIsLocked = (aliasHex.toLowerCase() === lockedHex.toLowerCase());
+        row += makeSwatch({
+          hex: aliasHex,
+          label: aliasVar,
+          locked: aliasIsLocked,
+          alias: true
+        });
+
+        // Now, rest of the shades, in order
+        group.shades.forEach(shade=>{
+          let varName = `--${group.prefix}-${shade}`;
+          let hex = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+          row += makeSwatch({
+            hex,
+            label: varName,
+            locked: (shade == group.locked),
+            alias: false
+          });
+        });
+
+        row += `</div></div>`;
+        container.innerHTML += row;
+      });
+    }
+
+    // Click to copy
+    function addCopyHandlers() {
+      document.querySelectorAll('.swatch-block').forEach(block => {
+        block.addEventListener('click', function(e) {
+          let hex = this.getAttribute('data-hex');
+          navigator.clipboard.writeText(hex);
+          // Tooltip feedback
+          this.classList.add('show-tooltip');
+          setTimeout(() => this.classList.remove('show-tooltip'), 750);
+        });
+        block.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            this.click();
+            e.preventDefault();
+          }
+        });
+      });
+    }
+
+    window.onload = function() {
+      renderPalette();
+      setTimeout(addCopyHandlers, 200); // after render
+    }
+  </script>
+</body>
+</html>
