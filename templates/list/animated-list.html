@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UQBS List Block Generator</title>
+  <link rel="stylesheet" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+  <script src="https://uq-business-school.github.io/ibis/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+  <style>
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+    .uqgenerator-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      border: 1px solid #CDCDCD;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: #555;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .preview-container {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px dashed #CDCDCD;
+    }
+    button {
+      padding: 10px;
+      background-color: #51247a;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .tinymce-container {
+      margin-bottom: 20px;
+    }
+    .auto-save-indicator {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    .auto-save-indicator.saving { color: #f39c12; }
+    .auto-save-indicator.saved { color: #27ae60; }
+    .auto-save-indicator.loading { color: #3498db; }
+  </style>
+</head>
+<body>
+  <div class="uq-container"> 
+    <div class="uqgenerator-container">
+      <!-- Live Preview Section -->
+      <div id="preview" class="preview-container"></div>
+
+      <!-- Input Fields -->
+      <label>List Content</label>
+      <p>Use the rich text editor below to create your list. Use numbered and nested lists. When ready, click <strong>Copy to Clipboard</strong> for Blackboard Ultra.</p>
+      
+      <div class="tinymce-container">
+        <textarea id="statementText" placeholder="Enter list HTML here">
+<ol>
+  <li>First item
+    <ol>
+      <li>Subitem A
+        <ol>
+          <li>Third-level</li>
+        </ol>
+      </li>
+      <li>Subitem B</li>
+    </ol>
+  </li>
+  <li>Second item</li>
+</ol>
+        </textarea>
+        <div id="autoSaveIndicator" class="auto-save-indicator">Auto-save: Ready</div>
+      </div>
+      
+      <button class="uq-button uq-button--large uq-button--expand" onclick="copyToClipboard()">
+        <span class="uq-icon uq-icon--standard--common-file-double"></span>
+        Copy to Clipboard
+      </button>
+    </div>
+  </div>
+
+<!-- UQBS List Block Styles -->
+<style id="uqbs-list-block-style">
+    @import url("https://uq-business-school.github.io/styleguide/css/superstyle.css");
+/* Modify these settings as needed */    
+:root{
+    --uqbs-list-item-font-size: 0.875rem;       /* Default: 0.875 to match Blackboard */
+    --uqbs-list-item-font-weight: normal;
+    --uqbs-list-item-line-height: 1.7;
+    --uqbs-list-item-margin-bottom: calc(var(--uqbs-list-item-font-size)); /* Default: half of the --uqbs-list-item-font-size; adjust spacing between List items */ 
+    --uqbs-list-circle-top: 0%;             /* Default: 0; Change to 50% if you want the element vertically-centered */
+    --uqbs-list-circle-top-adjust: calc(var(--uqbs-list-item-font-size) - 50%); /* Default: half of the --uqbs-list-item-font-size; If you channged the last one to 50%, change this one to -50% */ 
+    --uqbs-list-circle-bg-color1: #51247A;   /* Level 1 Background color */
+    --uqbs-list-circle-font-color1: #FFFFFF; /* Level 1 Font color */
+    --uqbs-list-circle-bg-color2: #962A8B;   /* Level 2 Background color */
+    --uqbs-list-circle-font-color2: #FFFFFF; /* Level 2 Font color */
+    --uqbs-list-circle-bg-color3: #1F0029;   /* Level 3 Background color */
+    --uqbs-list-circle-font-color3: #FFFFFF; /* Level 3 Font color */
+    /* box shadow */
+    --uqbs-list-box-shadow-color: rgba(0,0,0,0.00); /*change the last value, "0.00" to add rounded box border */
+    --uqbs-list-box-shadow-offset-x: 0px;
+    --uqbs-list-box-shadow-offset-y: 2px;
+    --uqbs-list-box-shadow-blur-radius: 12px;
+    --uqbs-list-box-shadow-spread-radius: 0px;
+}    
+.uqbs-list-block {
+  max-width: 1200px;
+  margin: 2rem 1rem;
+  padding: 1.5rem 1.5rem;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--uqbs-list-box-shadow-offset-x)
+              var(--uqbs-list-box-shadow-offset-y)
+              var(--uqbs-list-box-shadow-blur-radius)
+              var(--uqbs-list-box-shadow-spread-radius)
+              var(--uqbs-list-box-shadow-color);
+  overflow-x: hidden;
+  display: block;
+  font-weight: var(--uqbs-list-item-font-weight);
+}
+.uqbs-list-block li strong{font-weight: bold}
+
+.uqbs-list-item, .uqbs-list-item ol {
+  list-style: none;
+  margin: 0;
+  padding: 1.5rem;
+  counter-reset: uqbs-num;
+  font-weight: var(--uqbs-list-item-font-weight);
+}
+.uqbs-list-item > li, .uqbs-list-item ol > li {
+  position: relative;
+  padding-left: 3.2em;
+  min-height: 2.2em;
+  margin-bottom: var(--uqbs-list-item-margin-bottom);
+  font-size: var(--uqbs-list-item-font-size);
+  line-height: var(--uqbs-list-item-line-height);
+  animation: float 2s cubic-bezier(.77,0,.18,1) both;
+  opacity: 0;
+}
+.uqbs-list-item > li::before,
+.uqbs-list-item > li > ol > li::before,
+.uqbs-list-item > li > ol > li > ol > li::before {
+  position: absolute;
+  left: 0;
+  top: var(--uqbs-list-circle-top);
+  transform: translateY(var(--uqbs-list-circle-top-adjust));
+  width: 2.2em;
+  height: 2.2em;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1em;
+  box-shadow: 0 2px 6px rgba(81,36,122,0.08);
+  z-index: 1;
+  color: var(--uqbs-list-circle-font-color1, #FFFFFF);
+  background: var(--uqbs-list-circle-bg-color1, #51247A);
+  content: '';
+}
+.uqbs-list-item > li::before {
+  content: counter(uqbs-num, decimal);
+  counter-increment: uqbs-num;
+  background: var(--uqbs-list-circle-bg-color1, #51247A);
+  color: var(--uqbs-list-circle-font-color1, #FFFFFF);
+}
+.uqbs-list-item > li > ol { counter-reset: uqbs-alpha; }
+.uqbs-list-item > li > ol > li::before {
+  content: counter(uqbs-alpha, lower-alpha);
+  counter-increment: uqbs-alpha;
+  background: var(--uqbs-list-circle-bg-color2, #962A8B);
+  color: var(--uqbs-list-circle-font-color2, #FFFFFF);
+}
+.uqbs-list-item > li > ol > li > ol { counter-reset: uqbs-roman; }
+.uqbs-list-item > li > ol > li > ol > li::before {
+  content: counter(uqbs-roman, lower-roman);
+  counter-increment: uqbs-roman;
+  background: var(--uqbs-list-circle-bg-color3, #1F0029);
+  color: var(--uqbs-list-circle-font-color3, #FFFFFF);
+}
+@keyframes float {
+  0%   { opacity: 0; transform: translateX(120px);}
+  50%  { opacity: 0.9; transform: translateX(calc(var(--uqbs-list-item-font-size)*-1));}
+  100% { opacity: 1; transform: translateX(0);}
+}
+@media (max-width: 600px) {
+  .uqbs-list-block { padding: 1rem 0.2rem; }
+  .uqbs-list-item > li, .uqbs-list-item ol > li {
+    font-size: 1rem; padding-left: 2.6em;
+  }
+}
+@media print {
+  .uqbs-list-item > li, .uqbs-list-item ol > li {
+    opacity: 1 !important; animation: none !important;
+  }
+}
+/* Remove default CSS marker list elements from master CSS file */
+.uqbs-list-block ol li::marker { content: ''; display: none; }
+.uqbs-list-block ol, 
+.uqbs-list-block ol ol, 
+.uqbs-list-block ol ol ol,
+.uqbs-list-block ol ol ol ol {
+  list-style-type: none !important;
+  list-style: none !important;
+}
+</style>
+  
+<script>
+  // ========== CONFIG ==========
+  let autoSaveTimer = null;
+  let tinyMCEEditor = null;
+  const AUTO_SAVE_DELAY = 5000; // 5 seconds
+  const LOCAL_STORAGE_KEY = "IBISanimatedLists";
+  const CONFIG_URL = "https://uq-business-school.github.io/ibis/templates/interactive/tabs/tinymce.config.js";
+
+  // ========== PREVIEW/OUTPUT LOGIC ==========
+  function getUserListHTML() {
+    // Grab content from TinyMCE if available, else raw textarea
+    let html = '';
+    if (window.tinymce && tinyMCEEditor) {
+      html = tinyMCEEditor.getContent();
+    } else {
+      html = document.getElementById('statementText').value;
+    }
+    // Clean outer wrapping (strip <ol> if pasted in), wrap as .uqbs-list-block
+    let olContent = html;
+    // Always wrap preview in a block container
+        // Add uqbs-list-item class to every <ol> found
+        let processed = html.replace(/<ol(?![^>]*class=)/gi, '<ol class="uqbs-list-item"');
+        processed = processed.replace(/<ol([^>]*)class="([^"]*)"/gi, function(_, attrs, classes) {
+        if (classes.includes('uqbs-list-item')) return `<ol${attrs}class="${classes}"`;
+        return `<ol${attrs}class="uqbs-list-item ${classes}"`;
+        });
+        return `<div class="uqbs-list-block">${processed}</div>`;
+
+  }
+
+  function renderPreview() {
+    // Apply CSS for preview
+    document.getElementById('uqbs-list-block-style').disabled = false;
+    document.getElementById('preview').innerHTML = getUserListHTML();
+    // Staggered animation cascade
+    setTimeout(() => {
+      document.querySelectorAll('.uqbs-list-item > li, .uqbs-list-item ol > li').forEach((li, idx) => {
+        li.style.animationDelay = (idx * 0.18) + 's';
+        li.style.opacity = 1;
+      });
+    }, 60);
+  }
+
+  function copyToClipboard() {
+    const html = `
+     <!-- This block was generated on UQ IBIS: https://uq-business-school.github.io/ibis/ -->
+     <!-- UQBS Animated Lists, Version 1.0 - CC BY-NC 4.0 International License. -->
+     <!-- This software is provided "as-is" without warranty of any kind. -->
+     <!-- DO NOT CONTACT CENTRAL ELEARNING FOR SUPPORT ABOUT THIS ITEM - IT IS NOT SUPPORTED. -->
+     <!-- You can generate your own block by visiting: https://uq-business-school.github.io/ibis/ -->
+
+
+
+    <style>${document.getElementById('uqbs-list-block-style').innerHTML}</style>
+${getUserListHTML()}
+<script>
+document.querySelectorAll('.uqbs-list-item > li, .uqbs-list-item ol > li').forEach(function(li,idx){
+  li.style.animationDelay = (idx*0.18)+'s'; li.style.opacity=1;
+});
+<\/script>`;
+    navigator.clipboard.writeText(html).then(() => {
+      alert('Copied to clipboard!');
+    }).catch(err => {
+      alert('Error copying: ' + err);
+    });
+  }
+
+  // ========== AUTOSAVE ==========
+  function saveToLocalStorage() {
+    try {
+      const content = tinyMCEEditor ? tinyMCEEditor.getContent() : document.getElementById('statementText').value;
+      const data = { content: content, timestamp: new Date().toISOString() };
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+      updateAutoSaveIndicator('saved');
+    } catch (e) {
+      updateAutoSaveIndicator('error');
+    }
+  }
+
+  function loadSavedContent() {
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (data.content) {
+          document.getElementById('statementText').value = data.content;
+        }
+        updateAutoSaveIndicator('loaded');
+      }
+    } catch (e) { }
+  }
+
+  function triggerAutoSave() {
+    updateAutoSaveIndicator('saving');
+    if (autoSaveTimer) clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => { saveToLocalStorage(); }, AUTO_SAVE_DELAY);
+  }
+
+  function updateAutoSaveIndicator(status) {
+    const indicator = document.getElementById('autoSaveIndicator');
+    const now = new Date().toLocaleTimeString();
+    switch(status) {
+      case 'saving': indicator.textContent = 'Auto-save: Saving...'; indicator.className = 'auto-save-indicator saving'; break;
+      case 'saved': indicator.textContent = `Auto-save: Saved at ${now}`; indicator.className = 'auto-save-indicator saved'; break;
+      case 'loaded': indicator.textContent = 'Auto-save: Previous content loaded'; indicator.className = 'auto-save-indicator saved'; break;
+      case 'error': indicator.textContent = 'Auto-save: Error saving'; indicator.className = 'auto-save-indicator'; break;
+      default: indicator.textContent = 'Auto-save: Ready'; indicator.className = 'auto-save-indicator';
+    }
+  }
+
+  // ========== TINYMCE LOGIC ==========
+  // Try to load the shared config
+  function loadSharedConfig() {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = CONFIG_URL;
+      script.onload = () => resolve();
+      script.onerror = () => resolve();
+      document.head.appendChild(script);
+    });
+  }
+
+  async function initializeTinyMCE() {
+    loadSavedContent();
+    await loadSharedConfig();
+    // Give a moment for config to load
+    await new Promise(resolve => setTimeout(resolve, 100));
+    // Use shared config if available
+    if (typeof setupTinyMCE === 'function') {
+      const initialContent = document.getElementById('statementText').value;
+      setupTinyMCE('#statementText', initialContent, function(content) {
+        renderPreview();
+        triggerAutoSave();
+      });
+      setTimeout(() => {
+        tinyMCEEditor = tinymce.get('statementText');
+        if (tinyMCEEditor) {
+          renderPreview();
+          // Restore content if available
+          try {
+            const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (saved) {
+              const data = JSON.parse(saved);
+              if (data.content) {
+                tinyMCEEditor.setContent(data.content);
+                renderPreview();
+              }
+            }
+          } catch (e) {}
+        }
+      }, 500);
+    } else {
+      // Fallback
+      if (typeof tinymce !== 'undefined') {
+        tinymce.init({
+          selector: '#statementText',
+          height: 300,
+          menubar: false,
+          plugins: 'lists link code',
+          toolbar: 'undo redo | bold italic | bullist numlist | link | code',
+          content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; }',
+          setup: function(editor) {
+            editor.on('input change', function() {
+              renderPreview();
+              triggerAutoSave();
+            });
+          },
+          init_instance_callback: function(editor) {
+            tinyMCEEditor = editor;
+            renderPreview();
+            try {
+              const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+              if (saved) {
+                const data = JSON.parse(saved);
+                if (data.content) {
+                  editor.setContent(data.content);
+                  renderPreview();
+                }
+              }
+            } catch (e) {}
+          }
+        });
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    renderPreview();
+    initializeTinyMCE();
+  });
+
+  window.addEventListener('beforeunload', function() {
+    if (autoSaveTimer) {
+      clearTimeout(autoSaveTimer);
+      saveToLocalStorage();
+    }
+  });
+</script>
+</body>
+</html>
