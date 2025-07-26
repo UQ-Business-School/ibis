@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UQBS Checkbox List Block Generator</title>
+  <link rel="stylesheet" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+  <script src="https://uq-business-school.github.io/ibis/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+  <style>
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+    .uqgenerator-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      border: 1px solid #CDCDCD;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: #555;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .preview-container {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px dashed #CDCDCD;
+    }
+    button {
+      padding: 10px;
+      background-color: #51247a;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .tinymce-container {
+      margin-bottom: 20px;
+    }
+    .auto-save-indicator {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    .auto-save-indicator.saving { color: #f39c12; }
+    .auto-save-indicator.saved { color: #27ae60; }
+    .auto-save-indicator.loading { color: #3498db; }
+  </style>
+</head>
+<body>
+  <div class="uq-container"> 
+    <div class="uqgenerator-container">
+      <!-- Live Preview Section -->
+      <div id="preview" class="preview-container"></div>
+
+      <!-- Input Fields -->
+      <label>List Content</label>
+      <p>Use the rich text editor below to create your checkbox list. Use numbered and nested lists. When ready, click <strong>Copy to Clipboard</strong> for Blackboard Ultra. Users can check items and their progress will be saved automatically.</p>
+      
+      <div class="tinymce-container">
+        <textarea id="statementText" placeholder="Enter list HTML here">
+<ol>
+  <li>Complete assignment reading
+    <ol>
+      <li>Read chapter 1
+        <ol>
+          <li>Take notes on key concepts</li>
+        </ol>
+      </li>
+      <li>Read chapter 2</li>
+    </ol>
+  </li>
+  <li>Submit discussion post</li>
+  <li>Prepare for quiz</li>
+</ol>
+        </textarea>
+        <div id="autoSaveIndicator" class="auto-save-indicator">Auto-save: Ready</div>
+      </div>
+      
+      <button class="uq-button uq-button--large uq-button--expand" onclick="copyToClipboard()">
+        <span class="uq-icon uq-icon--standard--common-file-double"></span>
+        Copy to Clipboard
+      </button>
+    </div>
+  </div>
+
+<!-- UQBS Checkbox List Block Styles -->
+<style id="uqbs-list-block-style">
+    @import url("https://uq-business-school.github.io/styleguide/css/superstyle.css");
+/* Modify these settings as needed */    
+:root{
+    --uqbs-list-item-font-size: 0.875rem;       
+    --uqbs-list-item-font-weight: normal;
+    --uqbs-list-item-line-height: 1.7;
+    --uqbs-list-item-margin-bottom: calc(var(--uqbs-list-item-font-size));
+    --uqbs-checkbox-top: 0%;  /* Default: 0; Change to 50% if you want the element vertically-centered */
+    --uqbs-checkbox-top-adjust: calc(var(--uqbs-list-item-font-size) - 50%); /* Default: half of the --uqbs-list-item-font-size; If you channged the last one to 50%, change this one to -50% */  
+    --uqbs-checkbox-size: 20px;
+    --uqbs-checkbox-border-color: #51247A;
+    --uqbs-checkbox-checked-bg: #51247A;
+    --uqbs-checkbox-checked-color: #FFFFFF;
+    --uqbs-checkbox-checked-text-color: #D7D1CC;
+    /* --uqbs-checkbox-hover-bg: transparent; */ /* Note: background hover to be supported in future update */
+    /* box shadow */
+    --uqbs-list-box-shadow-color: rgba(0,0,0,0.00); /*change the last value, "0.00" to add rounded box border, e.g. "0.3" */
+    --uqbs-list-box-shadow-offset-x: 0px;
+    --uqbs-list-box-shadow-offset-y: 2px;
+    --uqbs-list-box-shadow-blur-radius: 12px;
+    --uqbs-list-box-shadow-spread-radius: 0px;
+}    
+.uqbs-list-block {
+  max-width: 1200px;
+  margin: 2rem 1rem;
+  padding: 1.5rem 1.5rem;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--uqbs-list-box-shadow-offset-x)
+              var(--uqbs-list-box-shadow-offset-y)
+              var(--uqbs-list-box-shadow-blur-radius)
+              var(--uqbs-list-box-shadow-spread-radius)
+              var(--uqbs-list-box-shadow-color);
+  overflow-x: hidden;
+  display: block;
+  font-weight: var(--uqbs-list-item-font-weight);
+}
+.uqbs-list-block li strong{font-weight: bold}
+
+.uqbs-list-item, .uqbs-list-item ol {
+  list-style: none;
+  margin: 0;
+  padding: var(--uqbs-list-item-font-size);
+  font-weight: var(--uqbs-list-item-font-weight);
+}
+.uqbs-list-item > li, .uqbs-list-item ol > li {
+  position: relative;
+  padding-left: 2.5em;
+  min-height: 2.2em;
+  margin-bottom: var(--uqbs-list-item-margin-bottom);
+  font-size: var(--uqbs-list-item-font-size);
+  line-height: var(--uqbs-list-item-line-height);
+  animation: float 2s cubic-bezier(.77,0,.18,1) both;
+  opacity: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* .uqbs-list-item > li:hover,
+.uqbs-list-item ol > li:hover {
+  background-color: var(--uqbs-checkbox-hover-bg);
+  border-radius: 4px;
+} */
+
+.uqbs-list-item > li.completed,
+.uqbs-list-item ol > li.completed {
+  text-decoration: line-through;
+  opacity: 0.7;
+  color: var(--uqbs-checkbox-checked-text-color, #D7D1CC);
+}
+
+/* Smooth transition for completed state */
+.uqbs-list-item > li,
+.uqbs-list-item ol > li {
+  transition: color 0.3s ease, text-decoration 0.3s ease, opacity 0.3s ease;
+}
+
+.uqbs-list-item > li.completed,
+.uqbs-list-item ol > li.completed {
+  transition: color 0.3s ease, text-decoration 0.3s ease, opacity 0.3s ease;
+}
+
+/* Optional: animate children for smoother check feel */
+.uqbs-list-item > li label span,
+.uqbs-list-item ol > li label span {
+  display: inline-block;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.uqbs-list-item > li.completed label span,
+.uqbs-list-item ol > li.completed label span {
+  transform: translateX(4px);
+  opacity: 0.7;
+}
+
+
+/* Custom checkbox styling */
+.uqbs-checkbox {
+  position: absolute;
+  left: 0;
+  top: var(--uqbs-checkbox-top);
+  transform: translateY(var(--uqbs-checkbox-top-adjust));
+  width: var(--uqbs-checkbox-size);
+  height: var(--uqbs-checkbox-size);
+  border: 2px solid var(--uqbs-checkbox-border-color);
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+/*.uqbs-checkbox:hover {
+  background-color: var(--uqbs-checkbox-hover-bg);
+  border-color: var(--uqbs-checkbox-checked-bg);
+} */
+
+.uqbs-checkbox.checked {
+  background-color: var(--uqbs-checkbox-checked-bg);
+  border-color: var(--uqbs-checkbox-checked-bg);
+}
+
+.uqbs-checkbox.checked::after {
+  content: '✓';
+  color: var(--uqbs-checkbox-checked-color);
+  font-weight: bold;
+  font-size: 14px;
+}
+
+@keyframes float {
+  0%   { opacity: 0; transform: translateX(120px);}
+  50%  { opacity: 0.9; transform: translateX(calc(var(--uqbs-list-item-font-size)*-1));}
+  100% { opacity: 1; transform: translateX(0);}
+}
+@media (max-width: 600px) {
+  .uqbs-list-block { padding: 1rem 0.2rem; }
+  .uqbs-list-item > li, .uqbs-list-item ol > li {
+    font-size: 1rem; padding-left: 2.6em;
+  }
+}
+@media print {
+  .uqbs-list-item > li, .uqbs-list-item ol > li {
+    opacity: 1 !important; animation: none !important;
+  }
+}
+/* Remove default CSS marker list elements from master CSS file */
+.uqbs-list-block ol li::marker { content: ''; display: none; }
+.uqbs-list-block ol, 
+.uqbs-list-block ol ol, 
+.uqbs-list-block ol ol ol,
+.uqbs-list-block ol ol ol ol {
+  list-style-type: none !important;
+  list-style: none !important;
+}
+</style>
+  
+<script>
+  // ========== CONFIG ==========
+  let autoSaveTimer = null;
+  let tinyMCEEditor = null;
+  const AUTO_SAVE_DELAY = 5000; // 5 seconds
+  const LOCAL_STORAGE_KEY = "IBISanimatedLists";
+  const CHECKBOX_STORAGE_KEY = "IBISCheckboxStates";
+  const CONFIG_URL = "https://uq-business-school.github.io/ibis/templates/interactive/tabs/tinymce.config.js";
+
+  // ========== CHECKBOX FUNCTIONALITY ==========
+  function generateItemId(listItem) {
+    // Generate a unique ID based on text content and position
+    const text = listItem.textContent.trim().substring(0, 50);
+    const position = Array.from(listItem.parentElement.children).indexOf(listItem);
+    return btoa(text + '_' + position).replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
+  }
+
+  function saveCheckboxState(itemId, checked) {
+    try {
+      const saved = localStorage.getItem(CHECKBOX_STORAGE_KEY) || '{}';
+      const states = JSON.parse(saved);
+      states[itemId] = checked;
+      localStorage.setItem(CHECKBOX_STORAGE_KEY, JSON.stringify(states));
+    } catch (e) {
+      console.error('Error saving checkbox state:', e);
+    }
+  }
+
+  function loadCheckboxStates() {
+    try {
+      const saved = localStorage.getItem(CHECKBOX_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      console.error('Error loading checkbox states:', e);
+      return {};
+    }
+  }
+
+  function toggleCheckbox(listItem) {
+    const checkbox = listItem.querySelector('.uqbs-checkbox');
+    const itemId = listItem.dataset.itemId;
+    const checked = !checkbox.classList.contains('checked');
+    
+    if (checked) {
+      checkbox.classList.add('checked');
+      listItem.classList.add('completed');
+    } else {
+      checkbox.classList.remove('checked');
+      listItem.classList.remove('completed');
+    }
+    
+    saveCheckboxState(itemId, checked);
+  }
+
+  function setupCheckboxes() {
+    const states = loadCheckboxStates();
+    
+    document.querySelectorAll('.uqbs-list-item > li, .uqbs-list-item ol > li').forEach((li) => {
+      // Generate unique ID for this item
+      const itemId = generateItemId(li);
+      li.dataset.itemId = itemId;
+      
+      // Create checkbox element
+      const checkbox = document.createElement('div');
+      checkbox.className = 'uqbs-checkbox';
+      
+      // Check if this item was previously checked
+      if (states[itemId]) {
+        checkbox.classList.add('checked');
+        li.classList.add('completed');
+      }
+      
+      li.insertBefore(checkbox, li.firstChild);
+      
+      // Add click handler
+      li.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleCheckbox(li);
+      });
+    });
+  }
+
+  // ========== PREVIEW/OUTPUT LOGIC ==========
+  function getUserListHTML() {
+    let html = '';
+    if (window.tinymce && tinyMCEEditor) {
+      html = tinyMCEEditor.getContent();
+    } else {
+      html = document.getElementById('statementText').value;
+    }
+    
+    let processed = html.replace(/<ol(?![^>]*class=)/gi, '<ol class="uqbs-list-item"');
+    processed = processed.replace(/<ol([^>]*)class="([^"]*)"/gi, function(_, attrs, classes) {
+      if (classes.includes('uqbs-list-item')) return `<ol${attrs}class="${classes}"`;
+      return `<ol${attrs}class="uqbs-list-item ${classes}"`;
+    });
+    return `<div class="uqbs-list-block">${processed}</div>`;
+  }
+
+  function renderPreview() {
+    document.getElementById('uqbs-list-block-style').disabled = false;
+    document.getElementById('preview').innerHTML = getUserListHTML();
+    
+    setTimeout(() => {
+      setupCheckboxes();
+      document.querySelectorAll('.uqbs-list-item > li, .uqbs-list-item ol > li').forEach((li, idx) => {
+        li.style.animationDelay = (idx * 0.18) + 's';
+        li.style.opacity = 1;
+      });
+    }, 60);
+  }
+
+  function copyToClipboard() {
+    const html = `
+     <!-- This block was generated on UQ IBIS: https://uq-business-school.github.io/ibis/ -->
+     <!-- UQBS Animated Checkbox Lists, Version 1.0 - Last update: 26 July 2025 --> 
+     <!-- NO DATA IS COLLECTED ON THIS CHECKLIST, AND ALL DATA IS STORED LOCALLY ON THE END USER'S WEB BROWSER. -->
+     <!-- Credit: Geoffrey Blazer, 2025; CC BY-NC-SA 4.0 International License. -->
+     <!-- This software is provided "as-is" without warranty of any kind. -->
+     <!-- DO NOT CONTACT CENTRAL ELEARNING FOR SUPPORT ABOUT THIS ITEM - IT IS NOT SUPPORTED. -->
+     <!-- You can generate your own block by visiting: https://uq-business-school.github.io/ibis/ -->
+
+    <style>${document.getElementById('uqbs-list-block-style').innerHTML}</style>
+${getUserListHTML()}
+<script>
+// Checkbox functionality
+function generateItemId(listItem) {
+  const text = listItem.textContent.trim().substring(0, 50);
+  const position = Array.from(listItem.parentElement.children).indexOf(listItem);
+  return btoa(text + '_' + position).replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
+}
+
+function saveCheckboxState(itemId, checked) {
+  try {
+    const saved = localStorage.getItem('IBISCheckboxStates') || '{}';
+    const states = JSON.parse(saved);
+    states[itemId] = checked;
+    localStorage.setItem('IBISCheckboxStates', JSON.stringify(states));
+  } catch (e) {
+    console.error('Error saving checkbox state:', e);
+  }
+}
+
+function loadCheckboxStates() {
+  try {
+    const saved = localStorage.getItem('IBISCheckboxStates');
+    return saved ? JSON.parse(saved) : {};
+  } catch (e) {
+    console.error('Error loading checkbox states:', e);
+    return {};
+  }
+}
+
+function toggleCheckbox(listItem) {
+  const checkbox = listItem.querySelector('.uqbs-checkbox');
+  const itemId = listItem.dataset.itemId;
+  const checked = !checkbox.classList.contains('checked');
+  
+  if (checked) {
+    checkbox.classList.add('checked');
+    listItem.classList.add('completed');
+  } else {
+    checkbox.classList.remove('checked');
+    listItem.classList.remove('completed');
+  }
+  
+  saveCheckboxState(itemId, checked);
+}
+
+function setupCheckboxes() {
+  const states = loadCheckboxStates();
+  
+  document.querySelectorAll('.uqbs-list-item > li, .uqbs-list-item ol > li').forEach(function(li) {
+    const itemId = generateItemId(li);
+    li.dataset.itemId = itemId;
+    
+    const checkbox = document.createElement('div');
+    checkbox.className = 'uqbs-checkbox';
+    
+    if (states[itemId]) {
+      checkbox.classList.add('checked');
+      li.classList.add('completed');
+    }
+    
+    li.insertBefore(checkbox, li.firstChild);
+    
+    li.addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleCheckbox(li);
+    });
+  });
+}
+
+// Initialize
+document.querySelectorAll('.uqbs-list-item > li, .uqbs-list-item ol > li').forEach(function(li,idx){
+  li.style.animationDelay = (idx*0.18)+'s'; 
+  li.style.opacity=1;
+});
+
+setupCheckboxes();
+<\/script>`;
+    navigator.clipboard.writeText(html).then(() => {
+      alert('Copied to clipboard!');
+    }).catch(err => {
+      alert('Error copying: ' + err);
+    });
+  }
+
+  // ========== AUTOSAVE ==========
+  function saveToLocalStorage() {
+    try {
+      const content = tinyMCEEditor ? tinyMCEEditor.getContent() : document.getElementById('statementText').value;
+      const data = { content: content, timestamp: new Date().toISOString() };
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+      updateAutoSaveIndicator('saved');
+    } catch (e) {
+      updateAutoSaveIndicator('error');
+    }
+  }
+
+  function loadSavedContent() {
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (data.content) {
+          document.getElementById('statementText').value = data.content;
+        }
+        updateAutoSaveIndicator('loaded');
+      }
+    } catch (e) { }
+  }
+
+  function triggerAutoSave() {
+    updateAutoSaveIndicator('saving');
+    if (autoSaveTimer) clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => { saveToLocalStorage(); }, AUTO_SAVE_DELAY);
+  }
+
+  function updateAutoSaveIndicator(status) {
+    const indicator = document.getElementById('autoSaveIndicator');
+    const now = new Date().toLocaleTimeString();
+    switch(status) {
+      case 'saving': indicator.textContent = 'Auto-save: Saving...'; indicator.className = 'auto-save-indicator saving'; break;
+      case 'saved': indicator.textContent = `Auto-save: Saved at ${now}`; indicator.className = 'auto-save-indicator saved'; break;
+      case 'loaded': indicator.textContent = 'Auto-save: Previous content loaded'; indicator.className = 'auto-save-indicator saved'; break;
+      case 'error': indicator.textContent = 'Auto-save: Error saving'; indicator.className = 'auto-save-indicator'; break;
+      default: indicator.textContent = 'Auto-save: Ready'; indicator.className = 'auto-save-indicator';
+    }
+  }
+
+  // ========== TINYMCE LOGIC ==========
+  function loadSharedConfig() {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = CONFIG_URL;
+      script.onload = () => resolve();
+      script.onerror = () => resolve();
+      document.head.appendChild(script);
+    });
+  }
+
+  async function initializeTinyMCE() {
+    loadSavedContent();
+    await loadSharedConfig();
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    if (typeof setupTinyMCE === 'function') {
+      const initialContent = document.getElementById('statementText').value;
+      setupTinyMCE('#statementText', initialContent, function(content) {
+        renderPreview();
+        triggerAutoSave();
+      });
+      setTimeout(() => {
+        tinyMCEEditor = tinymce.get('statementText');
+        if (tinyMCEEditor) {
+          renderPreview();
+          try {
+            const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (saved) {
+              const data = JSON.parse(saved);
+              if (data.content) {
+                tinyMCEEditor.setContent(data.content);
+                renderPreview();
+              }
+            }
+          } catch (e) {}
+        }
+      }, 500);
+    } else {
+      if (typeof tinymce !== 'undefined') {
+        tinymce.init({
+          selector: '#statementText',
+          height: 300,
+          menubar: false,
+          plugins: 'lists link code',
+          toolbar: 'undo redo | bold italic | bullist numlist | link | code',
+          content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; }',
+          setup: function(editor) {
+            editor.on('input change', function() {
+              renderPreview();
+              triggerAutoSave();
+            });
+          },
+          init_instance_callback: function(editor) {
+            tinyMCEEditor = editor;
+            renderPreview();
+            try {
+              const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+              if (saved) {
+                const data = JSON.parse(saved);
+                if (data.content) {
+                  editor.setContent(data.content);
+                  renderPreview();
+                }
+              }
+            } catch (e) {}
+          }
+        });
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    renderPreview();
+    initializeTinyMCE();
+  });
+
+  window.addEventListener('beforeunload', function() {
+    if (autoSaveTimer) {
+      clearTimeout(autoSaveTimer);
+      saveToLocalStorage();
+    }
+  });
+</script>
+</body>
+</html>
