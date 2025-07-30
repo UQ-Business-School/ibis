@@ -1,0 +1,220 @@
+<!-- V1.0 Assurance of Learning Rubric Builder -->
+<!-- Credit: Fiona Stroud, CC BY-NC-SA 4.0 -->
+<!-- This tool comes without any express warranties. -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Graduate Attribute Rubric Builder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      max-width: 900px;
+    }
+    h1, h2 {
+      margin-bottom: 10px;
+    }
+    .section {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    label {
+      display: block;
+      margin: 6px 0;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #bbb;
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #f4f4f4;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 18px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Graduate Attribute - Assurance of Learning Rubric Builder</h1>
+
+<div class="section">
+  <h2>1. Assessment Context</h2>
+  <strong>Student Level:</strong><br>
+  <label><input type="radio" name="studentLevel" value="Undergraduate"> Undergraduate</label>
+  <label><input type="radio" name="studentLevel" value="Postgraduate"> Postgraduate</label>
+  <label><input type="radio" name="studentLevel" value="Honours"> Honours</label>
+
+  <br><strong>Assessment Type:</strong><br>
+  <label><input type="checkbox" name="assessmentType" value="Essay"> Essay</label>
+  <label><input type="checkbox" name="assessmentType" value="Report"> Report</label>
+  <label><input type="checkbox" name="assessmentType" value="Presentation"> Presentation</label>
+  <label><input type="checkbox" name="assessmentType" value="Reflective Task"> Reflective Task</label>
+  <label><input type="checkbox" name="assessmentType" value="Case Study"> Case Study</label>
+  <label><input type="checkbox" name="assessmentType" value="Group Work"> Group Work</label>
+</div>
+
+<div class="section">
+  <h2>2. Graduate Attributes</h2>
+  <label><input type="checkbox" name="gradAttribute" value="Accomplished Scholars"> Accomplished Scholars</label>
+  <label><input type="checkbox" name="gradAttribute" value="Courageous Thinkers"> Courageous Thinkers</label>
+  <label><input type="checkbox" name="gradAttribute" value="Connected Citizens"> Connected Citizens</label>
+  <label><input type="checkbox" name="gradAttribute" value="Culturally Capable"> Culturally Capable</label>
+  <label><input type="checkbox" name="gradAttribute" value="Influential Communicators"> Influential Communicators</label>
+  <label><input type="checkbox" name="gradAttribute" value="Respectful Leaders"> Respectful Leaders</label>
+</div>
+
+<div class="section">
+  <h2>3. Key Criteria</h2>
+  <label><input type="checkbox" name="criteria" value="Academic Writing and Communication"> Academic Writing and Communication</label>
+  <label><input type="checkbox" name="criteria" value="Application of Theory to Practice"> Application of Theory to Practice</label>
+  <label><input type="checkbox" name="criteria" value="Reflection and Metacognition"> Reflection and Metacognition</label>
+  <label><input type="checkbox" name="criteria" value="Ethical Reasoning and Decision-Making"> Ethical Reasoning and Decision-Making</label>
+  <label><input type="checkbox" name="criteria" value="Teamwork and Collaboration"> Teamwork and Collaboration</label>
+  <label><input type="checkbox" name="criteria" value="Digital Capability"> Digital Capability</label>
+  <label><input type="checkbox" name="criteria" value="Quantitative or Data Analysis"> Quantitative or Data Analysis</label>
+  <label><input type="checkbox" name="criteria" value="Resilience and Adaptive Thinking"> Resilience and Adaptive Thinking</label>
+</div>
+
+<button onclick="generateRubric()">Generate Rubric</button>
+<button onclick="exportTableToCSV('rubric.csv')" style="display:none;" id="exportBtn">Export as CSV</button>
+
+<div id="rubricOutput"></div>
+
+<script>
+  const descriptors = {
+    "Academic Writing and Communication": {
+      "HD": "The response is exceptionally structured and articulated with precision, demonstrating advanced academic writing and communication.",
+      "D": "The response is well-structured and communicates ideas clearly with few minor lapses.",
+      "Credit": "The response demonstrates sound writing and communication, though may lack polish or consistency.",
+      "Pass": "The response communicates meaning but with noticeable lapses in clarity, structure, or tone.",
+      "Marginal Fail": "The response shows limited structure and inconsistent communication.",
+      "Fail": "The response lacks coherence and effective academic communication."
+    },
+    "Application of Theory to Practice": {
+      "HD": "The response integrates theoretical knowledge into complex real-world contexts with sophistication.",
+      "D": "The response effectively applies theory to practice with some insightful integration.",
+      "Credit": "The response shows sound application of theory, though integration may be general.",
+      "Pass": "The response applies basic theoretical knowledge to practice with limited detail.",
+      "Marginal Fail": "The response shows little connection between theory and practical context.",
+      "Fail": "The response fails to apply theoretical concepts meaningfully."
+    },
+    "Reflection and Metacognition": {
+      "HD": "The response demonstrates deep reflection with metacognitive insight into learning and decision processes.",
+      "D": "The response shows thoughtful reflection and recognition of cognitive processes.",
+      "Credit": "The response includes reflection but with limited depth or generalised insight.",
+      "Pass": "The response offers basic reflection with surface-level commentary.",
+      "Marginal Fail": "The response includes vague or descriptive reflection lacking insight.",
+      "Fail": "The response lacks evidence of reflection or metacognition."
+    },
+    "Ethical Reasoning and Decision-Making": {
+      "HD": "The response exhibits sophisticated ethical reasoning and consistently sound decision-making.",
+      "D": "The response demonstrates strong ethical reasoning and well-supported decisions.",
+      "Credit": "The response shows acceptable ethical consideration and decisions.",
+      "Pass": "The response reflects basic ethical reasoning with limited support.",
+      "Marginal Fail": "The response demonstrates superficial ethical understanding.",
+      "Fail": "The response fails to engage with ethical considerations."
+    },
+    "Teamwork and Collaboration": {
+      "HD": "The response exemplifies outstanding teamwork with proactive collaboration and leadership.",
+      "D": "The response demonstrates effective teamwork and positive collaboration.",
+      "Credit": "The response shows acceptable participation in teamwork.",
+      "Pass": "The response reflects minimal engagement with team processes.",
+      "Marginal Fail": "The response shows limited contribution to team efforts.",
+      "Fail": "The response does not demonstrate teamwork or collaboration."
+    },
+    "Digital Capability": {
+      "HD": "The response uses digital tools innovatively and effectively to enhance outcomes.",
+      "D": "The response demonstrates competent use of digital technologies.",
+      "Credit": "The response shows adequate digital skills applied appropriately.",
+      "Pass": "The response demonstrates basic digital literacy.",
+      "Marginal Fail": "The response shows inconsistent or limited digital capability.",
+      "Fail": "The response lacks effective use of digital tools."
+    },
+    "Quantitative or Data Analysis": {
+      "HD": "The response applies advanced quantitative or data analysis techniques with accuracy.",
+      "D": "The response demonstrates strong quantitative skills with minor errors.",
+      "Credit": "The response shows competent analysis though with some inaccuracies.",
+      "Pass": "The response applies basic quantitative methods adequately.",
+      "Marginal Fail": "The response has limited or flawed quantitative analysis.",
+      "Fail": "The response fails to apply quantitative or data analysis appropriately."
+    },
+    "Resilience and Adaptive Thinking": {
+      "HD": "The response exemplifies exceptional resilience by predicting challenges and adapting rapidly.",
+      "D": "The response anticipates and adapts to most challenges effectively.",
+      "Credit": "The response reflects some adaptability to challenges.",
+      "Pass": "The response addresses challenges with basic adaptability.",
+      "Marginal Fail": "The response struggles to adapt to challenges.",
+      "Fail": "The response does not address or adapt to challenges."
+    }
+  };
+
+  const performanceLevels = ["HD", "D", "Credit", "Pass", "Marginal Fail", "Fail"];
+
+  function generateRubric() {
+    const selectedCriteria = [...document.querySelectorAll('input[name="criteria"]:checked')].map(cb => cb.value);
+
+    const outputDiv = document.getElementById('rubricOutput');
+    outputDiv.innerHTML = '';
+
+    if(selectedCriteria.length === 0){
+      outputDiv.innerHTML = "<p style='color:red;'>Please select at least one Key Criterion.</p>";
+      document.getElementById('exportBtn').style.display = 'none';
+      return;
+    }
+
+    let html = '<table><thead><tr><th>Criterion</th>';
+    performanceLevels.forEach(level => html += `<th>${level}</th>`);
+    html += '</tr></thead><tbody>';
+
+    selectedCriteria.forEach(criterion => {
+      html += `<tr><td>${criterion}</td>`;
+      performanceLevels.forEach(level => {
+        let desc = descriptors[criterion]?.[level] || 'Descriptor not available';
+        html += `<td>${desc}</td>`;
+      });
+      html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+
+    outputDiv.innerHTML = html;
+    document.getElementById('exportBtn').style.display = 'inline-block';
+  }
+
+  function exportTableToCSV(filename) {
+    const rows = document.querySelectorAll('table tr');
+    const csv = Array.from(rows).map(row => {
+      const cells = row.querySelectorAll('th, td');
+      return Array.from(cells).map(cell => `"${cell.innerText.replace(/"/g, '""')}"`).join(',');
+    }).join('\n');
+
+    const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+</script>
+
+</body>
+</html>
