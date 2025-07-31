@@ -70,21 +70,10 @@ function setupCheckboxes() {
   });
 }
 
-// Initialize animations and checkboxes
-function initializeUQBSChecklist() {
-  // Set up animations
-  document.querySelectorAll('.uqbs-list-item > li, .uqbs-list-item ol > li').forEach(function(li, idx) {
-    li.style.animationDelay = (idx * 0.18) + 's'; 
-    li.style.opacity = 1;
-  });
-  
-  // Set up checkboxes
-  setupCheckboxes();
-}
+// Initialize
+document.querySelectorAll('.uqbs-list-item > li, .uqbs-list-item ol > li').forEach(function(li,idx){
+  li.style.animationDelay = (idx*0.18)+'s'; 
+  li.style.opacity=1;
+});
 
-// Auto-initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeUQBSChecklist);
-} else {
-  initializeUQBSChecklist();
-}
+setupCheckboxes();
