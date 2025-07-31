@@ -1,6 +1,8 @@
-// Checkbox functionality
-// https://uq-business-school.github.io/ibis/templates/list/checklist.js
+// UQBS Animated Checkbox Lists JavaScript
+// Version 1.0 - Last update: 26 July 2025
+// Credit: Geoffrey Blazer, 2025; CC BY-NC-SA 4.0 International License.
 
+// Checkbox functionality
 function generateItemId(listItem) {
   const text = listItem.textContent.trim().substring(0, 50);
   const position = Array.from(listItem.parentElement.children).indexOf(listItem);
@@ -13,7 +15,9 @@ function saveCheckboxState(itemId, checked) {
     const states = JSON.parse(saved);
     states[itemId] = checked;
     localStorage.setItem('IBISCheckboxStates', JSON.stringify(states));
-  } catch (e) { console.error('Error saving state:', e); }
+  } catch (e) {
+    console.error('Error saving checkbox state:', e);
+  }
 }
 
 function loadCheckboxStates() {
@@ -21,7 +25,7 @@ function loadCheckboxStates() {
     const saved = localStorage.getItem('IBISCheckboxStates');
     return saved ? JSON.parse(saved) : {};
   } catch (e) {
-    console.error('Error loading state:', e);
+    console.error('Error loading checkbox states:', e);
     return {};
   }
 }
@@ -30,29 +34,57 @@ function toggleCheckbox(listItem) {
   const checkbox = listItem.querySelector('.uqbs-checkbox');
   const itemId = listItem.dataset.itemId;
   const checked = !checkbox.classList.contains('checked');
-
-  checkbox.classList.toggle('checked', checked);
-  listItem.classList.toggle('completed', checked);
+  
+  if (checked) {
+    checkbox.classList.add('checked');
+    listItem.classList.add('completed');
+  } else {
+    checkbox.classList.remove('checked');
+    listItem.classList.remove('completed');
+  }
+  
   saveCheckboxState(itemId, checked);
 }
 
 function setupCheckboxes() {
   const states = loadCheckboxStates();
-  document.querySelectorAll('.uqbs-list-item > li, .uqbs-list-item ol > li').forEach((li) => {
+  
+  document.querySelectorAll('.uqbs-list-item > li, .uqbs-list-item ol > li').forEach(function(li) {
     const itemId = generateItemId(li);
     li.dataset.itemId = itemId;
-
+    
     const checkbox = document.createElement('div');
     checkbox.className = 'uqbs-checkbox';
+    
     if (states[itemId]) {
       checkbox.classList.add('checked');
       li.classList.add('completed');
     }
-
+    
     li.insertBefore(checkbox, li.firstChild);
-    li.addEventListener('click', (e) => {
+    
+    li.addEventListener('click', function(e) {
       e.stopPropagation();
       toggleCheckbox(li);
     });
   });
+}
+
+// Initialize animations and checkboxes
+function initializeUQBSChecklist() {
+  // Set up animations
+  document.querySelectorAll('.uqbs-list-item > li, .uqbs-list-item ol > li').forEach(function(li, idx) {
+    li.style.animationDelay = (idx * 0.18) + 's'; 
+    li.style.opacity = 1;
+  });
+  
+  // Set up checkboxes
+  setupCheckboxes();
+}
+
+// Auto-initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeUQBSChecklist);
+} else {
+  initializeUQBSChecklist();
 }
