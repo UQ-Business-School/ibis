@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UQBS Checkbox List Block Generator</title>
+  <link rel="stylesheet" href="https://uq-business-school.github.io/styleguide/css/superstyle.css" />
+  <script src="https://uq-business-school.github.io/ibis/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+  <style>
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+    .uqgenerator-container {
+      max-width: 1200px;
+      margin: 1rem auto;
+      padding: 15px;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      border: 1px solid #CDCDCD;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: #555;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .preview-container {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px dashed #CDCDCD;
+    }
+    button {
+      padding: 10px;
+      background-color: #51247a;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .tinymce-container {
+      margin-bottom: 20px;
+    }
+    .auto-save-indicator {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    .auto-save-indicator.saving { color: #f39c12; }
+    .auto-save-indicator.saved { color: #27ae60; }
+    .auto-save-indicator.loading { color: #3498db; }
+  </style>
+</head>
+<body>
+  <div class="uq-container"> 
+    <div class="uqgenerator-container">
+      <!-- Live Preview Section -->
+      <div id="preview" class="preview-container"></div>
+
+      <!-- Input Fields -->
+      <label>List Content</label>
+      <p>Use the rich text editor below to create your checkbox list. Use numbered and nested lists. When ready, click <strong>Copy to Clipboard</strong> for Blackboard Ultra. Users can check items and their progress will be saved automatically.</p> 
+      <div class="tinymce-container">
+        <textarea id="statementText" placeholder="Enter list HTML here">
+<h5><span style="color: #51247a;">Animated Checklist</span></h5>
+<p><em>Note</em>. This checklist status is tied to your current device and web browser. No data is transmitted by ticking these boxes, and the status will not transfer between browsers or computers. If your browser history is reset, it will also reset this checklist.</p>
+<ol>
+<li><strong>First item. </strong>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Morbi ut libero ipsum. Sed suscipit egestas nisi, vitae ornare elit commodo non.&nbsp;&nbsp;
+<ol>
+<li><strong>Subitem A.</strong> Suspendisse sed fermentum metus. Donec lobortis imperdiet enim, eget tristique dolor porta a. Morbi metus risus, pulvinar in est quis, dapibus cursus lacus.
+<ol>
+<li><strong>Third-level i</strong>. Proin fermentum erat a rhoncus posuere. Sed quis tortor at nulla molestie finibus. Aenean eget ultricies mauris, ut faucibus justo. Proin convallis purus non mauris tempus, at consectetur diam ullamcorper.</li>
+<li><strong>Third-level ii.</strong> Proin viverra sapien sit amet leo accumsan semper. Aenean mattis ante lectus, vitae rutrum sem sagittis vitae.</li>
+</ol>
+</li>
+<li><strong>Subitem B</strong>. Donec at eros nibh.&nbsp; Fusce tincidunt, lorem nec tincidunt facilisis, turpis lorem porta felis, non vestibulum sem diam quis velit.</li>
+</ol>
+</li>
+<li><strong>Second item.</strong> Etiam ac velit at velit rutrum pretium.&nbsp;</li>
+<li><strong>Third item</strong>.</li>
+<li><strong>Fourth item</strong>.</li>
+</ol>
+        </textarea>
+        <div id="autoSaveIndicator" class="auto-save-indicator">Auto-save: Ready</div>
+      </div>
+      
+      <button class="uq-button uq-button--large uq-button--expand" onclick="copyToClipboard()">
+        <span class="uq-icon uq-icon--standard--common-file-double"></span>
+        Copy to Clipboard
+      </button>
+      <br><br> <!-- Notice: No data is being transmitted; data stored on local device only. -->
+        <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+        <div class="uq-alert uqbs-rounded-border--all uq-alert--warning" role="note" data-aos="zoom-in" style="width: 80%; margin: 0 auto;">
+          <div class="uq-alert__message">
+            <span><p><em><strong>Note</strong></em>. <strong>No user data entered is transmitted or stored in a centrally accessible database.</strong>&nbsp;<br>End users can tick off items in the checklist, and it will remember what items were ticked as complete, but this data is only stored locally on the web browser on their device.</p>
+              <p><strong>The states on the checkboxes will change</strong> based on devices, browsers, or when clearing web history.</p>
+              <p>For privacy and security reasons, there are no plans on supporting a central database for the reporting on checklists.</p>
+            </span>
+          </div>	
+        </div>	
+      
+<script>
+AOS.init({
+  duration: 1200,
+  offset: 50
+})
+</script> 
+
+    </div>
+  </div>
+
+<!-- UQBS Checkbox List Block Styles -->
+<style id="uqbs-list-block-style">
+    @import url("https://uq-business-school.github.io/styleguide/css/superstyle.css");
+    @import url("https://uq-business-school.github.io/styleguide/css/uqbs-checklist.css");
+/* Modify these settings as needed */    
+:root{
+    --uqbs-list-item-font-size: 0.875rem;       
+    --uqbs-list-item-font-weight: normal;
+    --uqbs-list-item-line-height: 1.7;
+    --uqbs-list-item-margin-bottom: calc(var(--uqbs-list-item-font-size));
+    --uqbs-checkbox-top: 0%;  /* Default: 0; Change to 50% if you want the element vertically-centered */
+    --uqbs-checkbox-top-adjust: calc(var(--uqbs-list-item-font-size) - 50%); /* Default: half of the --uqbs-list-item-font-size; If you channged the last one to 50%, change this one to -50% */  
+    --uqbs-checkbox-size: 20px;
+    --uqbs-checkbox-border-color: #51247A;
+    --uqbs-checkbox-checked-bg: #51247A;
+    --uqbs-checkbox-checked-color: #FFFFFF;
+    --uqbs-checkbox-checked-text-color: #D7D1CC;
+    /* box shadow */
+    --uqbs-list-box-shadow-color: rgba(0,0,0,0.00); /*change the last value, "0.00" to add rounded box border, e.g. "0.3" */
+    --uqbs-list-box-shadow-offset-x: 0px;
+    --uqbs-list-box-shadow-offset-y: 2px;
+    --uqbs-list-box-shadow-blur-radius: 12px;
+    --uqbs-list-box-shadow-spread-radius: 0px;
+}    
+</style>
+  
+<script>
+  // ========== CONFIG ==========
+  let autoSaveTimer = null;
+  let tinyMCEEditor = null;
+  const AUTO_SAVE_DELAY = 5000; // 5 seconds
+  const LOCAL_STORAGE_KEY = "IBISanimatedLists";
+  const CHECKBOX_STORAGE_KEY = "IBISCheckboxStates";
+  const CONFIG_URL = "https://uq-business-school.github.io/ibis/templates/interactive/tabs/tinymce.config.js";
+
+  // ========== CHECKBOX FUNCTIONALITY ==========
+  function generateItemId(listItem) {
+    // Generate a unique ID based on text content and position
+    const text = listItem.textContent.trim().substring(0, 50);
+    const position = Array.from(listItem.parentElement.children).indexOf(listItem);
+    return btoa(text + '_' + position).replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
+  }
+
+  function saveCheckboxState(itemId, checked) {
+    try {
+      const saved = localStorage.getItem(CHECKBOX_STORAGE_KEY) || '{}';
+      const states = JSON.parse(saved);
+      states[itemId] = checked;
+      localStorage.setItem(CHECKBOX_STORAGE_KEY, JSON.stringify(states));
+    } catch (e) {
+      console.error('Error saving checkbox state:', e);
+    }
+  }
+
+  function loadCheckboxStates() {
+    try {
+      const saved = localStorage.getItem(CHECKBOX_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      console.error('Error loading checkbox states:', e);
+      return {};
+    }
+  }
+
+  function toggleCheckbox(listItem) {
+    const checkbox = listItem.querySelector('.uqbs-checkbox');
+    const itemId = listItem.dataset.itemId;
+    const checked = !checkbox.classList.contains('checked');
+    
+    if (checked) {
+      checkbox.classList.add('checked');
+      listItem.classList.add('completed');
+    } else {
+      checkbox.classList.remove('checked');
+      listItem.classList.remove('completed');
+    }
+    
+    saveCheckboxState(itemId, checked);
+  }
+
+  function setupCheckboxes() {
+    const states = loadCheckboxStates();
+    
+    document.querySelectorAll('.uqbs-list-item > li, .uqbs-list-item ol > li').forEach((li) => {
+      // Generate unique ID for this item
+      const itemId = generateItemId(li);
+      li.dataset.itemId = itemId;
+      
+      // Create checkbox element
+      const checkbox = document.createElement('div');
+      checkbox.className = 'uqbs-checkbox';
+      
+      // Check if this item was previously checked
+      if (states[itemId]) {
+        checkbox.classList.add('checked');
+        li.classList.add('completed');
+      }
+      
+      li.insertBefore(checkbox, li.firstChild);
+      
+      // Add click handler
+      li.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleCheckbox(li);
+      });
+    });
+  }
+
+  // ========== PREVIEW/OUTPUT LOGIC ==========
+  function getUserListHTML() {
+    let html = '';
+    if (window.tinymce && tinyMCEEditor) {
+      html = tinyMCEEditor.getContent();
+    } else {
+      html = document.getElementById('statementText').value;
+    }
+    
+    let processed = html.replace(/<ol(?![^>]*class=)/gi, '<ol class="uqbs-list-item"');
+    processed = processed.replace(/<ol([^>]*)class="([^"]*)"/gi, function(_, attrs, classes) {
+      if (classes.includes('uqbs-list-item')) return `<ol${attrs}class="${classes}"`;
+      return `<ol${attrs}class="uqbs-list-item ${classes}"`;
+    });
+    return `<div class="uqbs-list-block">${processed}</div>`;
+  }
+
+  function renderPreview() {
+    document.getElementById('uqbs-list-block-style').disabled = false;
+    document.getElementById('preview').innerHTML = getUserListHTML();
+    
+    setTimeout(() => {
+      setupCheckboxes();
+      document.querySelectorAll('.uqbs-list-item > li, .uqbs-list-item ol > li').forEach((li, idx) => {
+        li.style.animationDelay = (idx * 0.18) + 's';
+        li.style.opacity = 1;
+      });
+    }, 60);
+  }
+
+  function copyToClipboard() {
+    const html = `
+     <!-- This block was generated on UQ IBIS: https://uq-business-school.github.io/ibis/ -->
+     <!-- UQBS Animated Checkbox Lists, Version 1.1 - Last update: 31 July 2025 --> 
+     <!-- NO DATA IS COLLECTED ON THIS CHECKLIST, AND ALL DATA IS STORED LOCALLY ON THE END USER'S WEB BROWSER. -->
+     <!-- Credit: Geoffrey Blazer, 2025; CC BY-NC-SA 4.0 International License. -->
+     <!-- This software is provided "as-is" without warranty of any kind. -->
+     <!-- DO NOT CONTACT CENTRAL ELEARNING FOR SUPPORT ABOUT THIS ITEM - IT IS NOT SUPPORTED. -->
+     <!-- You can generate your own block by visiting: https://uq-business-school.github.io/ibis/ -->
+
+    <style>${document.getElementById('uqbs-list-block-style').innerHTML}</style>
+${getUserListHTML()}
+<script src="https://uq-business-school.github.io/ibis/templates/list/checklist.js">
+<\/script>`;
+    navigator.clipboard.writeText(html).then(() => {
+      alert('Copied to clipboard!');
+    }).catch(err => {
+      alert('Error copying: ' + err);
+    });
+  }
+
+  // ========== AUTOSAVE ==========
+  function saveToLocalStorage() {
+    try {
+      const content = tinyMCEEditor ? tinyMCEEditor.getContent() : document.getElementById('statementText').value;
+      const data = { content: content, timestamp: new Date().toISOString() };
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+      updateAutoSaveIndicator('saved');
+    } catch (e) {
+      updateAutoSaveIndicator('error');
+    }
+  }
+
+  function loadSavedContent() {
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (data.content) {
+          document.getElementById('statementText').value = data.content;
+        }
+        updateAutoSaveIndicator('loaded');
+      }
+    } catch (e) { }
+  }
+
+  function triggerAutoSave() {
+    updateAutoSaveIndicator('saving');
+    if (autoSaveTimer) clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => { saveToLocalStorage(); }, AUTO_SAVE_DELAY);
+  }
+
+  function updateAutoSaveIndicator(status) {
+    const indicator = document.getElementById('autoSaveIndicator');
+    const now = new Date().toLocaleTimeString();
+    switch(status) {
+      case 'saving': indicator.textContent = 'Auto-save: Saving...'; indicator.className = 'auto-save-indicator saving'; break;
+      case 'saved': indicator.textContent = `Auto-save: Saved at ${now}`; indicator.className = 'auto-save-indicator saved'; break;
+      case 'loaded': indicator.textContent = 'Auto-save: Previous content loaded'; indicator.className = 'auto-save-indicator saved'; break;
+      case 'error': indicator.textContent = 'Auto-save: Error saving'; indicator.className = 'auto-save-indicator'; break;
+      default: indicator.textContent = 'Auto-save: Ready'; indicator.className = 'auto-save-indicator';
+    }
+  }
+
+  // ========== TINYMCE LOGIC ==========
+  function loadSharedConfig() {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = CONFIG_URL;
+      script.onload = () => resolve();
+      script.onerror = () => resolve();
+      document.head.appendChild(script);
+    });
+  }
+
+  async function initializeTinyMCE() {
+    loadSavedContent();
+    await loadSharedConfig();
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    if (typeof setupTinyMCE === 'function') {
+      const initialContent = document.getElementById('statementText').value;
+      setupTinyMCE('#statementText', initialContent, function(content) {
+        renderPreview();
+        triggerAutoSave();
+      });
+      setTimeout(() => {
+        tinyMCEEditor = tinymce.get('statementText');
+        if (tinyMCEEditor) {
+          renderPreview();
+          try {
+            const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (saved) {
+              const data = JSON.parse(saved);
+              if (data.content) {
+                tinyMCEEditor.setContent(data.content);
+                renderPreview();
+              }
+            }
+          } catch (e) {}
+        }
+      }, 500);
+    } else {
+      if (typeof tinymce !== 'undefined') {
+        tinymce.init({
+          selector: '#statementText',
+          height: 300,
+          menubar: false,
+          plugins: 'lists link code',
+          toolbar: 'undo redo | bold italic | bullist numlist | link | code',
+          content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; }',
+          setup: function(editor) {
+            editor.on('input change', function() {
+              renderPreview();
+              triggerAutoSave();
+            });
+          },
+          init_instance_callback: function(editor) {
+            tinyMCEEditor = editor;
+            renderPreview();
+            try {
+              const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+              if (saved) {
+                const data = JSON.parse(saved);
+                if (data.content) {
+                  editor.setContent(data.content);
+                  renderPreview();
+                }
+              }
+            } catch (e) {}
+          }
+        });
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    renderPreview();
+    initializeTinyMCE();
+  });
+
+  window.addEventListener('beforeunload', function() {
+    if (autoSaveTimer) {
+      clearTimeout(autoSaveTimer);
+      saveToLocalStorage();
+    }
+  });
+</script>
+</body>
+</html>
